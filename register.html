@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>SOBIE</title>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An Academic Society">
+  <meta name="keywords"
+    content="society,academic,business,academic society,organization,alabama,economics,industry,university of north alabama,society of business industry and economics">
+  <meta name="classification" content="Academic">
+
+  <link rel="icon" type="image/x-icon" href="assets/sobie-icon.svg">
+
+  <!-- For all browsers -->
+  <link rel="icon" type="image/svg" sizes="32x32" href="assets/sobie-icon.svg">
+  <link rel="icon" type="image/svg" sizes="16x16" href="assets/sobie-icon.svg">
+
+  <!-- For Google and Android -->
+  <link rel="icon" type="image/svg" sizes="48x48" href="assets/sobie-icon.svg">
+  <link rel="icon" type="image/svg" sizes="192x192" href="assets/sobie-icon.svg">
+
+  <!-- For iPad -->
+  <link rel="apple-touch-icon" type="image/svg" sizes="167x167" href="assets/sobie-icon.svg">
+  <!-- For iPhone -->
+  <link rel="apple-touch-icon" type="image/svg" sizes="180x180" href="assets/sobie-icon.svg">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="styles/sobie-styles.css" />
+</head>
+
+<body class="container-fluid">
+
+  <nav id="navSobie" class="navbar fixed-top navbar-light bg-light navbar-expand-sm ">
+
+    <!-- sobie logo -->
+    <!-- <a id="navSobieLogo" href="/" class="navbar-brand border-1 rounded-pill text-center my-2 mx-4 px-4 sobie-logo"
+      href="#">
+      <span class="fw-bold text-center" style="letter-spacing: .5em; ">
+        S·O·B·I·E
+      </span> -->
+      <a id="navSobieLogo" href="index.html" class="ms-2">
+        <img src="assets/sobie-icon.svg" class="img-fluid navbar-brand" width="62">
+      </a>
+
+    <span class="fs-6">
+      
+       SOBIE:<i>The Society of Business, Industry, & Economics</i></span>
+      
+    <!-- hamburger button -->
+    <button class="navbar-toggler me-4" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- collapsible section start-->
+    <!-- <div class="collapse navbar-collapse ms-2" id="collapsibleNavbar"> -->
+
+    <!-- <ul class="navbar-nav mx-auto">
+        <li class="nav-item text-center">
+          <a class="nav-link text-dark" href="docs/resources/sobie-2022-proceedings-guidelines.pdf" target="_blank"
+            role="button">
+            Proceeding Guidelines<i class="bi bi-filetype-pdf ms-1"></i>
+          </a>
+        </li>
+      </ul> -->
+
+    <!-- </div> -->
+    <!-- end collabsible section -->
+  </nav>
+
+
+  <div class="row">
+    <div class="col-md-10 offset-md-1">
+      <h2>SOBIE 2025: Online Registration Form</h2>
+
+      <!-- process info -->
+      <div class="text-center">
+        <div class="rounded m-2 border-1 alert alert-info" style="border: solid 1px">
+          This form ⭐️now registers you for SOBIE⭐️ and provides you with an email confirmation. 
+        </div>
+      </div>
+      <!-- end process info -->
+
+      <div class="card mb-2">
+        <div class="card-body">
+          <h4 class="text-muted mt-2">SOBIE '25 Details</h4>
+          <ul class="list-group list-group-flush shadow-sm">
+            <li class="list-group-item">
+              <strong>REGISTRATION DEADLINE:</strong> ~late March, 2025
+            </li>
+            <li class="list-group-item">
+              <strong>SOBIE Dates:</strong> Wednesday, April 9th through Friday, April 11th, 2025
+            </li>
+            <li class="list-group-item">
+              <strong>SOBIE Venue:</strong> The Sandestin Golf & Beach Resort, sandestin.com, in sunny ☀️ Destin,
+              Florida
+            </li>
+            <li class="list-group-item">
+              <strong>SOBIE Conference Fee:</strong> Conference Fee: $325 (Includes Plenary Session Breakfast, Thursday, April
+              10th)<br>
+              <i class="mt-1 ms-4">Student Fee: $0 (but you must complete this registration form)</i>
+            </li>
+            <li class="list-group-item">
+              <strong>RESEARCH SUBMISSION:</strong> Use this same form to submit your research to SOBIE.<br>
+              <i class="mt-1 ms-4">Not quite ready to submit?</i> Go ahead and register and you may submit later.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+      <!-- <form class="needs-validation" novalidate> -->
+      <!-- registrant info -->
+      <div class="card mb-2">
+        <div class="card-body">
+          <!-- name -->
+          <div class="input-group ms-2 mb-3">
+            <span class="input-group-text">Name</span>
+            <!-- <input type="text" class="form-control w-10" placeholder="Salutation (Mr., Mrs., Dr., ...)"> -->
+            <input type="text" id="firstName" class="ms-2 form-control w-20" placeholder="First Name" required>
+
+
+            <!-- <input type="text" class="form-control w-10" placeholder="Middle Init."> -->
+            <input type="text" id="lastName" class="ms-2 form-control w-20" placeholder="Last Name" required>
+          </div>
+
+
+
+
+          <!-- email -->
+          <div class="input-group  ms-2 mb-3">
+            <span class="input-group-text" id="">Email</span>
+            <input type="email" id="email" class="ms-2 form-control w-20" placeholder="Email Address" required>
+            <div class="invalid-feedback">
+              Please enter a valid email address
+            </div>
+          </div>
+
+          <!-- first time sobie -->
+          <div class="input-group ms-2  mb-3">
+            <span class="input-group-text me-2" id="firstSobieGroup">First Time Attending Sobie?</span>
+            <div class="btn-group" role="group">
+              <input type="radio" class="btn-check sobieFirst" name="sobieFirst" id="firstYes" autocomplete="off" value="yes" required>
+              <label class="btn btn-outline-primary" for="firstYes">Yes</label>
+             
+              <input type="radio" class="btn-check sobieFirst" name="sobieFirst" id="firstNo" autocomplete="off"
+                value="no" required>
+              <label class="btn btn-outline-primary" for="firstNo">No</label>
+              
+              <span class="invalid-feedback ms-3 my-auto">Please select an option</span>
+              <span class="fw-bold fst-italic ms-3 my-auto" id="firstSobieMessage"> </span>
+            </div>
+          </div>
+
+          <!-- a student -->
+          <div class="input-group ms-2  mb-3">
+            <span class="input-group-text me-2" id="sobieStudentGroup">Are you a student?</span>
+            <div class="btn-group" role="group">
+              <input type="radio" class="btn-check sobieStudent" name="sobieStudent" id="studentYes" autocomplete="off"
+                value="yes" required>
+              <label class="btn btn-outline-primary" for="studentYes">Yes</label>
+              <input type="radio" class="btn-check sobieStudent" name="sobieStudent" id="studentNo" autocomplete="off"
+                value="no" required>
+              <label class="btn btn-outline-primary" for="studentNo">No</label>
+              <span class="invalid-feedback ms-3 my-auto">Please select an option</span>
+            </div>
+          </div>
+
+          <!-- student register div -->
+          <div class="ms-4 mt-2 border-top border-bottom" id="sobieStudentSection">
+            <h4 class="text-muted mt-2">Student Registrant Information </h4>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="">Academic Affiliation</span>
+              <input type="text" id="studentAffiliation" class="ms-2 form-control" placeholder="e.g. UNA" required>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="">Program of Study</span>
+              <input type="text" id="studentProgram" class="ms-2 form-control"
+                placeholder="e.g. Economics, Information Systems" required>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">Student Classification</span>
+
+              <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                <input type="radio" class="btn-check studentClass" name="studentClass" id="undergraduate"
+                  value="undergraduate" autocomplete="off" required>
+                <label class="btn btn-outline-primary" for="undergraduate">Undergraduate</label>
+                <input type="radio" class="btn-check studentClass" name="studentClass" id="graduate" value="graduate"
+                  autocomplete="off" required>
+                <label class="btn btn-outline-primary" for="graduate">Graduate</label>
+                <input type="radio" class="btn-check studentClass" name="studentClass" id="doctoral" value="doctoral"
+                  autocomplete="off" required>
+                <label class="btn btn-outline-primary" for="doctoral">Doctoral</label>
+                <input type="radio" class="btn-check studentClass" name="studentClass" id="studentOther" value="other"
+                  autocomplete="off" required>
+                <label class="btn btn-outline-primary" for="studentOther">Other</label>
+                <input id="studentOtherText" type="text" class="ms-2 form-control" disabled
+                  placeholder="Please Specify">
+              </div>
+            </div>
+          </div>
+
+          <!-- faculty register div -->
+          <div class="ms-4 mt-2 border-top border-bottom" id="sobieFacultySection">
+            <h4 class="text-muted mt-2">Faculty & Partner Registration</h4>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">University, Organization, or Company Affiliation</span>
+              <input type="text" id="facultyAffiliation" class="ms-2 form-control" placeholder="e.g. UNA" required>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">Academic Rank & Department, or Job Title</span>
+              <input type="text" id="facultyRank" class="ms-2 form-control"
+                placeholder="e.g. Professor, Information Systems" required>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <!-- end registrant info -->
+
+
+      <!-- hotel accommodations -->
+      <div class="card border-top">
+        <div class="card-body">
+          <h2 class="card-title text-muted mt-2">Hotel Accomodation Acknowledgement</h2>
+          <div class="card-text">
+            <ul>
+              <li class="list-group-item border-0">
+                <i>All Conference Activities are held at the Sandestin Golf & Beach Resort.</i>
+              </li>
+              <li class="list-group-item border-0">
+                <i>Hotel accommodations are made separately from Conference Registration.</i>
+              </li>
+              <li class="list-group-item border-0">
+                <i>Plan your stay at the Sandestin Golf & Beach Resort or a nearby venue. <br> <strong>SOBIE Group
+                    Code:</strong> <a target="_blank"  class="btn-outline-primary">Book Online, TBA </a> or by Phone: <a href="tel:800-320-8115"
+                    target="_blank">800-320-8115</a>, (use code: TBA)
+              </li>
+              <li class="list-group-item border-0"><i>Discounted rates are available for the weekends <strong
+                    class="fs-5">before
+                    &
+                    after</strong> the SOBIE conference.</i></li>
+              <li class="list-group-item border-0"><i>Extend your stay and enjoy the Sandestin Area</i></li>
+
+            </ul>
+          </div>
+          <div class="card-footer">
+            <!-- hotel agree -->
+
+            <div class="m-4 input-group mb-3 text-center">
+              <!-- <div class="input-group-text"> -->
+              <!-- <input class="mt-0" id="hotelAgree" name="hotelAgree" type="checkbox" value="yes" aria-label="Checkbox for following text input"> -->
+              <!-- </div> -->
+              <!-- <span class="ms-2" id=""> -->
+              <!-- <button class="btn btn-outline-primary" id="hotelAgree">I acknowledge that I must make hotel accommodations separately from this Conference Registration Form</button> -->
+
+              <div class="btn-group text-center" role="group">
+                <input type="radio" class="btn-check hotelAgree" name="hotelAgree" id="hotelAgree" autocomplete="off"
+                  value="yes" required>
+                <label class="btn btn-outline-info text-dark" for="hotelAgree">I acknowledge that I must make hotel
+                  accommodations separately from this Conference Registration Form</label>
+               
+                <div class="invalid-feedback ms-3 my-auto">Please click the hotel acknowledgement to continue</div>
+
+              </div>
+              <div class="ms-3 my-3 right">👆🏻Please click the hotel acknowledgement to continue</div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <!-- research section -->
+      <div class="mt-2 card mb-2" id="researchSection">
+        <div class="card-body">
+          <h2 class="card-title text-muted mt-2">Research Submission</h2>
+
+          <!-- research intent  -->
+          <div class="input-group mb-3" id="researchIntentGroup">
+            <span class="input-group-text me-2">Do you plan to submit your research to SOBIE?</span>
+            <div class="btn-group" role="group">
+              <!-- <ul>
+            <li class="list-group-item border-0"> -->
+              <input type="radio" class="btn-check researchIntent" name="researchIntent" id="yesNow" value="yesNow"
+                autocomplete="off" required>
+              <label class="btn btn-outline-primary" for="yesNow">Yes, I am ready now</label>
+              <!-- </li>
+            <li class="list-group-item border-0"> -->
+              <input type="radio" class="btn-check researchIntent" name="researchIntent" id="yesLater" value="yesLater"
+                autocomplete="off" required>
+              <label class="btn btn-outline-primary" for="yesLater">Yes, but not at this time</label>
+              <!-- </li>
+            <li class="list-group-item border-0"> -->
+              <input type="radio" class="btn-check researchIntent" name="researchIntent" id="noAttend" value="noAttend"
+                autocomplete="off" required>
+              <label class="btn btn-outline-primary" for="noAttend">No, I plan to attend only</label>
+              <div class="invalid-feedback ms-3 my-auto">Please select an option</div>
+
+              <!-- </li>
+          </ul>
+           -->
+            </div>
+
+          </div><!-- end research intent -->
+
+          <!-- not submitting yet -->
+          <div id="notSubmitYetSection">
+            <ul>
+              <li class="list-group-item border-0" id="notSubmitMsg">
+                <i>Thank you for letting us know. <br>Please email your your submission when you are ready (details in your registraton confirmation email)</i>
+              </li>
+          </div>
+          <!-- end not submitting yet -->
+
+          <!-- not submitting  -->
+          <div id="notSubmitSection">
+            <ul>
+              <li class="list-group-item border-0" id="notSubmitMsg">
+                <i>Thank you for letting us know. <br>
+                  If you change your mind, you may still submit via email to the SOBIE editor (details in your registraton confirmation email)</i>
+              </li>
+          </div>
+          <!-- end not submitting  -->
+
+
+
+          <div id="submissionSection">
+            <!-- submission type-->
+            <div class="input-group mb-3">
+              <span class="input-group-text me-2" id="">Submission Type</span>
+              <div class="btn-group" role="group">
+                <input type="radio" class="btn-check submissionType" name="submissionType" id="abstractOnly"
+                  value="Abstract Only" autocomplete="off" required>
+                <label class="btn btn-outline-primary" for="abstractOnly">Abstract Only</label>
+
+                <input type="radio" class="btn-check submissionType" name="submissionType" id="workingPaper"
+                  value="Working Paper" autocomplete="off" required>
+                <label class="btn btn-outline-primary" for="workingPaper">Working Paper</label>
+
+                <input type="radio" class="btn-check submissionType" name="submissionType" id="completePaper"
+                  value="Complete Paper" autocomplete="off" required>
+                <label class="btn btn-outline-primary" for="completePaper">Complete Paper</label>
+
+                <div class="invalid-feedback ms-3 my-auto">Please select an option</div>
+
+              </div>
+            </div>
+
+            <!-- Submission title -->
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="">Submission Title</span>
+              <input type="text" class="ms-2 form-control w-20" id="submissionTitle" placeholder="Submission Title"
+                required>
+            </div>
+
+            <!-- coauthors -->
+            <div class="input-group mb-3">
+              <span class="input-group-text me-2" id="submissionAuthorsGroup">Are there co-authors?</span>
+              <div class="btn-group" role="group">
+                <input type="radio" class="btn-check submissionAuthors" name="submissionAuthors" id="coauthorYes"
+                  autocomplete="off" value="yes" required>
+                <label class="btn btn-outline-primary" for="coauthorYes">Yes</label>
+
+                <input type="radio" class="btn-check submissionAuthors" name="submissionAuthors" id="coauthorNo"
+                  autocomplete="off" value="no" required>
+                <label class="btn btn-outline-primary" for="coauthorNo">No</label>
+                <div class="invalid-feedback ms-3 my-auto">Please select an option</div>
+              </div>
+            </div>
+
+            <!-- coauthor section -->
+            <div id="submissionAuthorshipGroup">
+              <!-- authorship -->
+              <div class="input-group ms-3 mb-3" id="">
+                <span class="input-group-text" id="">Authorship</span>
+                <input type="text" class="ms-2 form-control w-20" id="submissionAuthorship"
+                  placeholder="Please list all co-authors" required>
+              </div>
+
+              <!-- student coauthor -->
+              <div class="input-group mb-3" id="studentPaperGroup">
+                <span class="input-group-text ms-3 me-2">Is at least one co-author a student?</span>
+                <div class="btn-group" role="group">
+                  <input type="radio" class="btn-check studentPaper" name="studentPaper" id="studentPaperYes"
+                    autocomplete="off" value="yes" required>
+                  <label class="btn btn-outline-primary" for="studentPaperYes">Yes</label>
+                  <input type="radio" class="btn-check studentPaper" name="studentPaper" id="studentPaperNo"
+                    autocomplete="off" value="no" required>
+                  <label class="btn btn-outline-primary" for="studentPaperNo">No</label>
+                  <div class="invalid-feedback ms-3 my-auto">Please select an option</div>
+                </div>
+              </div>
+
+              <!-- Which session would you prefer to present in? -->
+              <div class="input-group ms-2 mb-3" id="studentPaperPreference">
+                <ul>
+                  <li class="list-group-item border-0">
+                    Which session would you prefer to present in?
+                    <i>(Faculty & Student collaborations may present in either session)</i>
+                  </li>
+
+                  <li class="list-group-item border-0 ms-2">
+
+
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                      <input type="radio" class="btn-check sessionPreference" name="sessionPreference"
+                        id="studentSession" value="studentSession" autocomplete="off" required>
+                      <label class="btn btn-outline-primary" for="studentSession">Student Session</label>
+
+                      <input type="radio" class="btn-check sessionPreference" name="sessionPreference"
+                        id="facultySession" value="facultySession" autocomplete="off" required>
+                      <label class="btn btn-outline-primary" for="facultySession">Faculty Session</label>
+
+                      <input type="radio" class="btn-check sessionPreference" name="sessionPreference"
+                        id="noSessionPreference" value="noSessionPreference" autocomplete="off" required>
+                      <label class="btn btn-outline-primary" for="noSessionPreference">No Session Preference</label>
+                      <div class="invalid-feedback ms-3 my-auto">Please select an option</div>
+                    </div>
+                  </li>
+                </ul>
+
+              </div>
+            </div>
+
+            <!-- abstract -->
+            <div class="card-text mb-2">
+              <span class="input-group-text">Submission Abstract</span>
+              <div class="mx-3">
+                <textarea class="form-control mt-2" id="submissionAbstract" rows="6" placeholder="copy & paste abstract"
+                  required></textarea>
+              </div>
+            </div>
+
+            <!-- submssionUpload -->
+            <!-- todo: show only if not abstract only selecteds -->
+            <!-- <div class="card-text mb-2">
+            <span class="input-group-text">Submission Upload</span>
+            <div class="mx-3">
+              <input class="form-control mt-2" type="file" id="formFile">
+            </div>
+          </div> -->
+
+            <!-- area of research -->
+            <div class="input-group mb-3">
+              <span class="input-group-text me-2" id="">Primary area of research</span>
+              <input type="text" id="researchArea" class="form-control w-20 me-2"
+                placeholder="e.g., Accounting, Economics, Information Systems, ..." required>
+
+              <!-- <div class="card-text">
+              <span class="input-group-text">Primary area of research</span> -->
+              <!-- <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="researchAreasDropdown" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  Research Areas
+                </button>
+                <ul class="dropdown-menu" id="researchAreasList" aria-labelledby="researchAreasDropdown">
+                
+                </ul>
+              </div> -->
+
+              <!-- <ul id="researchAreasList">
+              </ul> -->
+            </div>
+
+            <!-- include proceedings-->
+            <div class="input-group mb-3" id="includeProdceedingsGroup">
+              <span class="input-group-text me-2" id="">Would you like your submission included in the SOBIE
+                proceedings?</span>
+              <div class="btn-group" role="group">
+                <input type="radio" class="btn-check includeProdceedings" name="includeProdceedings" id="includeYes"
+                  autocomplete="off" value="yes" required>
+                <label class="btn btn-outline-primary" for="includeYes">Yes</label>
+                <input type="radio" class="btn-check includeProdceedings" name="includeProdceedings" id="includeNo"
+                  autocomplete="off" value="no" required>
+                <label class="btn btn-outline-primary" for="includeNo">No</label>
+                <div class="invalid-feedback ms-3 my-auto">Please select an option</div>
+              </div>
+            </div>
+            <!-- end include proceedings-->
+
+            <!-- preferred time slot -->
+            <div class="card-text mb-2" id="timeSlotGroup">
+              <!-- <div class="mx-3"> -->
+
+              <!-- <div class="input-group mb-3" > -->
+              <span class="input-group-text">Are there any time slots that you are not available to present?</span>
+              <div class="btn-group" role="group">
+                <ul>
+                  <li class="list-group-item border-0">
+                    <input type="checkbox" class="btn-check timeSlot" name="timeSlot" id="noWedAM" value="noWedAM"
+                      autocomplete="off">
+                    <label class="btn btn-outline-primary" for="noWedAM">Wednesday Morning, 7:30-1:30</label>
+                  </li>
+                  <li class="list-group-item border-0">
+                    <input type="checkbox" class="btn-check timeSlot" name="timeSlot" id="noThAM" value="noThAM"
+                      autocomplete="off">
+                    <label class="btn btn-outline-primary" for="noThAM">Thursday Morning, 9-noon.</label>
+                    <input type="checkbox" class="btn-check timeSlot" name="timeSlot" id="noThPM" value="noThPM"
+                      autocomplete="off">
+                    <label class="btn btn-outline-primary" for="noThPM">Thursday Afternoon, noon-6</label>
+                  </li>
+                  <li class="list-group-item border-0">
+                    <input type="checkbox" class="btn-check timeSlot" name="timeSlot" id="noFrAM" value="noFrAM"
+                      autocomplete="off">
+                    <label class="btn btn-outline-primary" for="noFrAM">Friday Morning, 7:30-1:30</label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- end preferred time slot -->
+
+
+          </div><!-- end submission section-->
+
+
+
+
+        </div>
+        <!-- end of card body -->
+      </div><!-- end of research section -->
+
+      <!-- any other  -->
+      <div class="card p-2 mb-2">
+        <span class="input-group-text">Any additional details?
+          <!-- <button class="btn btn-secondary">Yes</button> -->
+        </span>
+        <div class="mx-3">
+          <textarea class="form-control mt-2" id="anyOtherDetails" rows="3"
+            placeholder="Please provide additional details as needed."></textarea>
+        </div>
+      </div>
+      <!-- end any other -->
+
+      <!-- review info -->
+      <div class="card p-3">
+        <div class="card-text text-center">
+          <!-- <input class="btn btn-primary" type="submit" value=""> -->
+          <!-- <a href="#reviewModal" class="btn btn-success" role="button" data-bs-toggle="modal" data-bs-target="#reviewModal">NEXT: Review Your Registration Information</a> -->
+          <button id="reviewRegistration" class="btn btn-success" role="button" data-bs-toggle="modal"
+            data-bs-target="#reviewModal">NEXT: Review Your Registration Information</button>
+        </div>
+      </div>
+
+
+    </div><!-- end column -->
+  </div> <!-- end row -->
+
+  <!-- </form> -->
+
+  <!--  reviewModal -->
+  <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div id="reviewConfirm" class="modal-content">
+        <div class="modal-header">
+          <!-- todo: update date with variable -->
+          <h2 class="modal-title">Review SOBIE '25 Registration Information</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body ">
+
+          <!-- <div>
+            <i class="bi bi-1-circle-fill me-2"></i>Review Your Registration Information. <br>
+            <i class="bi bi-2-circle-fill me-2"></i>Either:<br>
+            <p class="ms-3">COPY/PASTE this information & email to <a href="/cdn-cgi/l/email-protection"
+                class="__cf_email__" data-cfemail="e08b848d818c8f8e85a0958e81ce858495">[email&#160;protected]</a></p>
+
+            <p class="ms-3">Or, <br>
+              <span id="mailLink"></span> to generate your registration email.
+            </p>
+            <i class="bi bi-3-circle-fill me-2"></i>If applicable, attach your Research Submission (abstract, working or
+            complete paper) as a Word Doc or PDF.
+
+
+
+          </div> -->
+
+          <ul id="registrationReviewList" class="list-group">
+
+          </ul>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Go Back & Make Changes</button>
+          <button id="submitRegistration" type="button" class="btn btn-success">Submit Registration</button>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end reviewModal -->
+
+
+  <!-- footer -->
+<footer class="py-3 my-2">
+  <ul class="nav justify-content-center border-top pt-3 mb-3">
+    <li class="nav-item">
+      <a href="https://sobieconference.org" class="nav-link px-2 text-body-secondary">
+        &copy; 2025 SOBIE | sobieconference.org
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="https://www.una.edu/faculty/bcumbie.html" target="_blank" class="nav-link px-2 text-body-secondary">
+        @SOBIE Web Team
+      </a>
+    </li>
+  </ul>
+</footer>
+</div>
+
+
+
+
+
+<!-- ↓script calls -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+
+<!-- <script type="module" src="scripts/sobie-controller.js"></script> -->
+
+<script type="module" src="scripts/sobie-register.js"></script>
+
+</body>
+
+</html>
