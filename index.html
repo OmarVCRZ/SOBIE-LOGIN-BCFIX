@@ -34,38 +34,50 @@
 </head>
 <body class="container-fluid">
 
-  <nav id="navSobie" class="navbar fixed-top navbar-light bg-light navbar-expand-sm ">
+  <nav id="navSobie" class="navbar fixed-top navbar-light bg-light navbar-expand-sm">
+    <div class="container-fluid">
   
-    <!-- sobie logo -->
-    <!-- <a id="navSobieLogo" href="/" class="navbar-brand border-1 rounded-pill text-center my-2 mx-4 px-4 sobie-logo"
-      href="#">
-      <span class="fw-bold text-center" style="letter-spacing: .5em; ">
-        S·O·B·I·E
-      </span> -->
-        <img src="assets/sobie-icon.svg" class="img-fluid navbar-brand ms-2" width="62"></img>
-    </a>
+      <!-- SOBIE logo (icon only, with optional link to homepage) -->
+      <a id="navSobieLogo" href="index.html" class="ms-2">
+        <img src="assets/sobie-icon.png" class="img-fluid navbar-brand" width="62" alt="SOBIE Icon">
+      </a>
   
-    <span class="fs-6"><i>SOBIE: The Society of Business, Industry, & Economics</i></span>
-    <!-- hamburger button -->
-    <button class="navbar-toggler me-4" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <!-- Brand Text -->
+      <span class="fs-6">
+        SOBIE: <i>The Society of Business, Industry, & Economics</i>
+      </span>
   
-    <!-- ↓collapsible section start-->
-    <div class="collapse navbar-collapse ms-2" id="collapsibleNavbar">
+      <!-- Hamburger / collapsible button -->
+      <button class="navbar-toggler me-4" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
   
-      <ul class="navbar-nav mx-auto">
-        <li class="nav-item text-center">
-          <a class="nav-link text-dark border border-info rounded-pill" href="assets/sobieDocs/sobie2025-callForPapers.pdf" target="cfp"
-            role="button">
-            2025 Call For Papers<i class="bi bi-filetype-pdf ms-1"></i>
-          </a>
-        </li>
-      </ul>
+      <!-- Collapsible nav section -->
+      <div class="collapse navbar-collapse ms-2" id="collapsibleNavbar">
+        <ul class="navbar-nav ms-auto me-4">
   
+          <!-- Home -->
+          <li class="nav-item mx-2">
+            <a class="nav-link text-dark" href="/">Home</a>
+          </li>
+  
+          <!-- About -->
+          <li class="nav-item mx-2">
+            <a class="nav-link text-dark" href="#about">About</a>
+          </li>
+  
+          <!-- Login -->
+          <li class="nav-item mx-2">
+            <a class="nav-link text-dark border border-info rounded-pill px-3" href="/login">
+              Login
+            </a>
+          </li>
+  
+        </ul>
+      </div>
     </div>
-  <!-- ↑end collabsible section -->
   </nav>
+  
   
  
   <!-- ↓sobie header -->

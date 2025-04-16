@@ -1,0 +1,78 @@
+/* ========== SOBIE 2023 CUSTOM BOOTSTRAP THEME ========== */
+
+/* Typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+  }
+  
+  /* Navbar */
+  .navbar {
+    background-color: #1f2937;
+  }
+  
+  .navbar .navbar-brand,
+  .navbar .navbar-text {
+    color: #f0f0f0;
+    font-weight: bold;
+  }
+  
+  .navbar-brand img {
+    height: 40px;
+  }
+  
+  /* Cards */
+  .card {
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 0 0.75rem rgba(0, 0, 0, 0.05);
+  }
+  
+  .card-header {
+    background-color: #e2e8f0;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  
+  /* Buttons */
+  .btn-success {
+    background-color: #005a32;
+    border-color: #004721;
+  }
+  
+  .btn-success:hover {
+    background-color: #00703c;
+    border-color: #005a32;
+  }
+  
+  .btn-outline-primary {
+    border-color: #1d4ed8;
+    color: #1d4ed8;
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: #1d4ed8;
+    color: #fff;
+  }
+  
+  /* Form Labels */
+  .form-label {
+    font-weight: 500;
+  }
+  
+  /* Footer */
+  footer {
+    background-color: #f1f5f9;
+    font-size: 0.9rem;
+  }
+  
+  footer a {
+    color: #6c757d;
+    text-decoration: none;
+  }
+  
+  footer a:hover {
+    text-decoration: underline;
+  }
+  
