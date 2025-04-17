@@ -108,7 +108,8 @@ router.get('/user-dashboard/export', async (req, res) => {
 
 // ===== ADMIN DASHBOARD =====
 router.get('/admin-dashboard', async (req, res) => {
-    if (!req.session.isAdmin) return res.redirect('/login');
+    if (!req.session.tempAdmin) return res.redirect('/login');
+    delete req.session.tempAdmin; // admin must verify each time;
 
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
@@ -235,10 +236,12 @@ router.post('/login', async (req, res) => {
     const isAdminLogin = password === process.env.ADMIN_SECRET_PASSWORD;
 
     if (isAdminLogin) {
-        const tokenVerify = crypto.randomBytes(20).toString('hex');
-        req.session.adminLogin = { email, tokenVerify };
+        const verifyToken = crypto.randomBytes(20).toString('hex');
+        user.tokenVerify = verifyToken;
+        user.loginTokenExpires = Date.now() + 15 * 60 * 1000;
+        await user.save();
 
-        const link = `${process.env.HOST_IP}/verify-login?token=${tokenVerify}`;
+        const link = `${process.env.HOST_IP}/verify-login?token=${verifyToken}`;
         await transporter.sendMail({
             to: email,
             subject: "SOBIE Admin Login Verification",
@@ -305,20 +308,25 @@ router.get('/verify-login', async (req, res) => {
 
     // 🔒 Admin login
     if (req.session.adminLogin && req.session.adminLogin.tokenVerify === token) {
-        req.session.isAdmin = true;
+        req.session.tempAdmin = true;
         delete req.session.adminLogin;
-        return res.redirect('/admin-dashboard');
+        res.redirect('/admin-dashboard');
     }
 
     // 🔒 Regular user login
-    const user = await UserSOBIE.findOne({ tokenVerify: token });
+    const user = await UserSOBIE.findOne({
+        tokenVerify: token,
+        loginTokenExpires: { $gt: Date.now() }
+      });
+      
     if (!user) return res.send("Invalid or expired login link.");
-
+      
     user.tokenVerify = null;
+    user.loginTokenExpires = null;
     await user.save();
-
     req.session.userId = user._id;
     res.redirect('/user-dashboard');
+      
 });
 
 

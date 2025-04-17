@@ -35,6 +35,10 @@ const userSchema = new mongoose.Schema({
         type: String, // this is for email verification
         default: null // stores null in db if tokenVerify is not set manually (nothing was given)
     },
+    loginTokenExpires: {
+        type: Date,
+        default: null
+    },
     isVerified: {
         type: Boolean,
         default: false,
