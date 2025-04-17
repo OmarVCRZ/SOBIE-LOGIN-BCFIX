@@ -17,7 +17,7 @@
       </a>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item mx-2">
-          <a class="nav-link active" href="/">Home</a>
+          <a class="nav-link active" href="/user-dashboard">Dashboard</a>
         </li>
         <li class="nav-item mx-2">
             <a class="nav-link <%= activePage === 'registration' ? 'active' : '' %>" href="/registration">Conference Registration</a>
@@ -31,9 +31,9 @@
     <div class="alert alert-success text-center"><%= successMsg %></div>
   <% } %>
 
-  <% if (user.hotelAgree) { %>
+  <% if (user.hotelAgree && user.hasResearch) { %>
     <div class="alert alert-info text-center">
-      <strong>You're all set!</strong> Your SOBIE conference registration has been received.
+      <strong>You're all set!</strong> Your SOBIE conference registration and research submission have been received.
       <br>Be sure to book your hotel using code <strong>SOBIE</strong> at the Sandestin Golf & Beach Resort.
     </div>
   
@@ -47,6 +47,7 @@
       </div>
     </div>
   <% } %>
+  
   
   <div class="container">
     <h2 class="mb-4">Welcome, <%= user.firstName %>!</h2>
@@ -66,7 +67,7 @@
     <div class="card mb-5">
       <div class="card-header">Change Password</div>
       <div class="card-body">
-        <form action="/profile" method="POST">
+        <form action="/update-password" method="POST">
           <div class="mb-3">
             <label for="currentPassword" class="form-label">Current Password</label>
             <input type="password" class="form-control" name="currentPassword" required>
@@ -85,23 +86,23 @@
     </div>
 
     <!-- Conference Location Map (Coming Soon) -->
-    <div class="card mb-4">
-      <div class="card-header">Conference Location</div>
-      <div class="card-body">
-        <p>Location of SOBIE 2025 conference at Sandestin Golf & Beach Resort:</p>
-        <!-- Placeholder for Google Map -->
-        <div id="sobieMap" style="height: 300px; background-color: #f5f5f5; border: 1px solid #ccc;">
-          <p class="text-center pt-5">[Google Map Integration Coming Soon]</p>
+    <% if (user.hasResearch) { %>
+        <div class="card mb-4">
+          <div class="card-header">SOBIE Conference Location</div>
+          <div class="card-body text-center">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13967.108397096603!2d-86.32972119462095!3d30.37835189414802!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8890c406ea1ae4d3%3A0x2a2ccfc013db9f9d!2sSandestin%20Golf%20and%20Beach%20Resort!5e0!3m2!1sen!2sus!4v1713217238100!5m2!1sen!2sus"
+              width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
+    <% } %>      
 
   <% if (user.role === 'researcher') { %>
     <div class="card mb-4">
       <div class="card-header">Your Research Submissions</div>
       <div class="card-body">
-        <% if (submissions.length > 0) { %>
+        <% if (user.hasResearch && submissions.length > 0) { %>
           <% submissions.forEach(sub => { %>
             <div class="mb-3 border-bottom pb-2">
               <h5><%= sub.title %></h5>
@@ -128,13 +129,12 @@
             <a href="/user-dashboard/export" class="btn btn-outline-success btn-sm">Export Research as CSV</a>
           </div>
         <% } else { %>
-          <p class="text-danger">You haven’t submitted any research yet.</p>
-          <a href="/submit-research" class="btn btn-primary">Submit Research</a>
+            <p class="text-danger">No research submission found.</p>
         <% } %>
       </div>
     </div>
   <% } %>
-
+  
   <!-- Footer -->
   <footer class="py-3 my-4">
     <ul class="nav justify-content-center border-top pt-3 mb-3">
