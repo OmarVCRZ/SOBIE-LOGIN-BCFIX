@@ -189,7 +189,6 @@ router.post('/submit-research', async (req, res) => {
 });
 
 // ===== SIGNUP =====
-// ===== SIGNUP =====
 router.post('/signup', async (req, res) => {
     const {
         firstName, lastName, email, username, password, confirmPassword
