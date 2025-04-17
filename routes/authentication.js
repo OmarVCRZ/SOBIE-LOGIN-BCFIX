@@ -236,40 +236,28 @@ router.post('/login', async (req, res) => {
     const isAdminLogin = password === process.env.ADMIN_SECRET_PASSWORD;
 
     if (isAdminLogin) {
+        const user = await UserSOBIE.findOne({ email });
+        if (!user) return res.send("No admin account found with this email.");
+    
         const verifyToken = crypto.randomBytes(20).toString('hex');
         user.tokenVerify = verifyToken;
         user.loginTokenExpires = Date.now() + 15 * 60 * 1000;
         await user.save();
-
+    
         const link = `${process.env.HOST_IP}/verify-login?token=${verifyToken}`;
         await transporter.sendMail({
             to: email,
             subject: "SOBIE Admin Login Verification",
             text: `Click the link to verify admin login:\n\n${link}`
         });
-
+    
+        req.session.adminLogin = {
+            email,
+            tokenVerify: verifyToken
+        };
+        
         return res.redirect('/verify');
     }
-
-    const user = await UserSOBIE.findOne({ email });
-    if (!user) return res.send("Invalid Email or Password");
-
-    const validPass = await bcrypt.compare(password, user.passwordHash);
-    if (!validPass) return res.send("Invalid Email or Password");
-
-    const verifyToken = crypto.randomBytes(20).toString('hex');
-    user.tokenVerify = verifyToken;
-    await user.save();
-
-    const link = `${process.env.HOST_IP}/verify-login?token=${verifyToken}`;
-    await transporter.sendMail({
-        to: email,
-        subject: "SOBIE Login Verification",
-        text: `Click the link to verify your login:\n\n${link}`
-    });
-
-    req.session.tempUserId = user.email;
-    res.redirect('/verify');
 });
 
 // ===== VERIFY GET & FINALIZE =====
@@ -290,7 +278,8 @@ router.post('/finalize-signup', async (req, res) => {
     if (!userId) return res.send("Session expired.");
 
     const user = await UserSOBIE.findById(userId);
-    if (!user || user.isVerified) return res.send("Invalid or already verified.");
+    if (!user) return res.send("Invalid or already verified.");
+
 
     user.isVerified = true;
     user.tokenVerify = null;
@@ -310,7 +299,7 @@ router.get('/verify-login', async (req, res) => {
     if (req.session.adminLogin && req.session.adminLogin.tokenVerify === token) {
         req.session.tempAdmin = true;
         delete req.session.adminLogin;
-        res.redirect('/admin-dashboard');
+        return res.redirect('/admin-dashboard'); // ADD return here
     }
 
     // 🔒 Regular user login
