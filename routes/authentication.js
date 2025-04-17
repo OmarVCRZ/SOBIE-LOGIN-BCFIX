@@ -25,6 +25,15 @@ router.get('/login', (req, res) => res.render('login'));
 router.get('/signup', (req, res) => res.render('signup'));
 router.get('/forgot-password', (req, res) => res.render('forgot-password'));
 
+
+// ===== CONFERENCE REGISTRATION PAGE =====
+router.get('/registration', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/login');
+    const user = await UserSOBIE.findById(req.session.userId);
+    if (!user) return res.redirect('/login');
+    res.render('registration', { user, activePage: 'registration' });
+  });
+  
 // ===== PASSWORD RESET FORM =====
 router.get('/reset-password/:token', async (req, res) => {
   const user = await UserSOBIE.findOne({
@@ -61,10 +70,10 @@ router.get('/user-dashboard', async (req, res) => {
     submissions,
     currentPage: page,
     totalPages,
-    successMsg // ✅ pass to EJS
+    successMsg,
+    activePage: 'dashboard' // Add this if using active nav highlighting
   });
 });
-
 
 // ===== USER EXPORT CSV =====
 router.get('/user-dashboard/export', async (req, res) => {
@@ -302,24 +311,27 @@ router.get('/profile', async (req, res) => {
   });
   
   // ===== VERIFY LOGIN TOKEN =====
-  router.get('/verify-login', async (req, res) => {
-    const { token } = req.query;
-  
-    if (req.session.adminLogin && req.session.adminLogin.tokenVerify === token) {
-        delete req.session.adminLogin;
-        req.session.isAdmin = true;
-        return res.redirect('/admin-dashboard');
-    }
-  
-    const user = await UserSOBIE.findOne({ tokenVerify: token });
-    if (!user) return res.send("Invalid or expired login link.");
-  
-    user.tokenVerify = null;
-    await user.save();
-  
-    req.session.userId = user._id;
-    res.redirect('/user-dashboard');
-  });
+ router.get('/verify-login', async (req, res) => {
+  const { token } = req.query;
+
+  // 🔒 Admin login
+  if (req.session.adminLogin && req.session.adminLogin.tokenVerify === token) {
+    req.session.isAdmin = true;
+    delete req.session.adminLogin;
+    return res.redirect('/admin-dashboard');
+  }
+
+  // 🔒 Regular user login
+  const user = await UserSOBIE.findOne({ tokenVerify: token });
+  if (!user) return res.send("Invalid or expired login link.");
+
+  user.tokenVerify = null;
+  await user.save();
+
+  req.session.userId = user._id;
+  res.redirect('/user-dashboard');
+});
+
   
   // ===== PASSWORD RESET FLOW =====
   router.post('/forgot-password', async (req, res) => {
@@ -363,40 +375,30 @@ router.get('/profile', async (req, res) => {
   
     res.send("Password successfully updated. You may now log in.");
   });
-  
-  // ===== PROFILE UPDATE LOGIC =====
-// ===== PROFILE UPDATE LOGIC =====
+
+// Profile
 router.post('/profile', async (req, res) => {
   if (!req.session.userId) return res.redirect('/login');
 
   const {
-    username,
-    firstName,
-    lastName,
     role,
-    currentPassword,
-    newPassword,
-    confirmNewPassword,
-    researchTitle,
-    researchAbstract,
-    sessionPreference,
-    coAuthorsRawInput,
     isStudent,
     studentAffiliation,
     studentProgram,
     studentClass,
     facultyAffiliation,
     facultyTitle,
+    researchTitle,
+    researchAbstract,
+    coAuthorsRawInput,
+    sessionPreference,
     hotelAgree
   } = req.body;
 
   const user = await UserSOBIE.findById(req.session.userId);
   if (!user) return res.send("User not found");
 
-  // Basic Info
-  user.username = username;
-  user.firstName = firstName;
-  user.lastName = lastName;
+  // Update registration info
   user.role = role;
   user.hotelAgree = hotelAgree === 'on';
 
@@ -407,7 +409,7 @@ router.post('/profile', async (req, res) => {
     user.researchAbstract = researchAbstract;
     user.sessionPreference = sessionPreference;
     user.coAuthors = coAuthorsRawInput
-      ? coAuthorsRawInput.split(',').map(n => n.trim()).filter(Boolean)
+      ? coAuthorsRawInput.split(',').map(name => name.trim()).filter(Boolean)
       : [];
   } else {
     user.hasResearch = false;
@@ -417,7 +419,7 @@ router.post('/profile', async (req, res) => {
     user.coAuthors = [];
   }
 
-  // Student/Faculty Info
+  // Student/Faculty
   user.isStudent = isStudent === 'yes';
   user.studentAffiliation = user.isStudent ? studentAffiliation : '';
   user.studentProgram = user.isStudent ? studentProgram : '';
@@ -425,21 +427,34 @@ router.post('/profile', async (req, res) => {
   user.facultyAffiliation = user.isStudent ? '' : facultyAffiliation;
   user.facultyTitle = user.isStudent ? '' : facultyTitle;
 
-  // Password Change
-  if (currentPassword && newPassword && confirmNewPassword) {
-    const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
-    if (!isMatch) return res.send("Current password is incorrect.");
-    if (newPassword !== confirmNewPassword) return res.send("New passwords do not match.");
-    user.passwordHash = await bcrypt.hash(newPassword, 10);
-  }
-
   await user.save();
 
-  // ✅ Add success message to session and redirect
-  req.session.successMsg = "Registration information updated successfully!";
+  // Send confirmation email
+  const mapLink = 'https://www.google.com/maps?q=Sandestin+Golf+and+Beach+Resort';
+  await transporter.sendMail({
+    to: user.email,
+    subject: "SOBIE Conference Registration Confirmation",
+    text: `
+Dear ${user.firstName},
+
+Thank you for registering for the SOBIE Conference.
+
+🗓 Conference Dates: April 1–3, 2025  
+📍 Location: Sandestin Golf & Beach Resort  
+📞 Hotel Booking: 800-320-8115 (Use group code: SOBIE)  
+📍 Map: ${mapLink}
+
+Remember: hotel accommodations must be arranged separately. We look forward to seeing you at SOBIE!
+
+Sincerely,  
+SOBIE Conference Team
+    `
+  });
+
+  // Success feedback
+  req.session.successMsg = "Conference registration submitted successfully!";
   res.redirect('/user-dashboard');
 });
-
 
   // ===== LOGOUT =====
   router.get('/logout', (req, res) => {

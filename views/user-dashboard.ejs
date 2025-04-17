@@ -2,153 +2,150 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SOBIE - Sign Up</title>
+  <title>SOBIE - User Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/public/styles/sobie-styles.css">
+  <link rel="stylesheet" href="/styles/sobie-styles.css">
 </head>
 
-<body class="container py-5">
-  <h2 class="text-center mb-4">Create Your SOBIE Account</h2>
+<body class="container-fluid">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 px-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+        <img src="/assets/sobie-icon.svg" alt="SOBIE Logo" width="40">
+      </a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item mx-2">
+          <a class="nav-link active" href="/">Home</a>
+        </li>
+        <li class="nav-item mx-2">
+            <a class="nav-link <%= activePage === 'registration' ? 'active' : '' %>" href="/registration">Conference Registration</a>
+        </li>
+      </ul>
+      <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+    </div>
+  </nav>
 
-  <form action="/signup" method="POST" class="mx-auto" style="max-width: 600px;">
-    <!-- Basic Info -->
-    <div class="row mb-3">
-      <div class="col">
-        <label class="form-label">First Name</label>
-        <input type="text" class="form-control" name="firstName" required>
+  <% if (successMsg) { %>
+    <div class="alert alert-success text-center"><%= successMsg %></div>
+  <% } %>
+
+  <% if (user.hotelAgree) { %>
+    <div class="alert alert-info text-center">
+      <strong>You're all set!</strong> Your SOBIE conference registration has been received.
+      <br>Be sure to book your hotel using code <strong>SOBIE</strong> at the Sandestin Golf & Beach Resort.
+    </div>
+  
+    <div class="card mb-4">
+      <div class="card-header">SOBIE Conference Location</div>
+      <div class="card-body text-center">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13967.108397096603!2d-86.32972119462095!3d30.37835189414802!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8890c406ea1ae4d3%3A0x2a2ccfc013db9f9d!2sSandestin%20Golf%20and%20Beach%20Resort!5e0!3m2!1sen!2sus!4v1713217238100!5m2!1sen!2sus"
+          width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
-      <div class="col">
-        <label class="form-label">Last Name</label>
-        <input type="text" class="form-control" name="lastName" required>
+    </div>
+  <% } %>
+  
+  <div class="container">
+    <h2 class="mb-4">Welcome, <%= user.firstName %>!</h2>
+
+    <!-- Account Info -->
+    <div class="card mb-4">
+      <div class="card-header">Account Information</div>
+      <div class="card-body">
+        <p><strong>Name:</strong> <%= user.firstName %> <%= user.lastName %></p>
+        <p><strong>Email:</strong> <%= user.email %></p>
+        <p><strong>Username:</strong> <%= user.username %></p>
+        <p><strong>Account Role:</strong> <%= user.role %></p>
       </div>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">Email Address</label>
-      <input type="email" class="form-control" name="email" required>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Username</label>
-      <input type="text" class="form-control" name="username" required>
-    </div>
-
-    <div class="row mb-3">
-      <div class="col">
-        <label class="form-label">Password</label>
-        <input type="password" class="form-control" name="password" required>
-      </div>
-      <div class="col">
-        <label class="form-label">Confirm Password</label>
-        <input type="password" class="form-control" name="confirmPassword" required>
-      </div>
-    </div>
-
-    <!-- Role -->
-    <div class="mb-3">
-      <label class="form-label">Registering As</label>
-      <select class="form-select" name="role" id="role" required>
-        <option value="">Select Role</option>
-        <option value="attendee">Attendee</option>
-        <option value="researcher">Researcher</option>
-      </select>
-    </div>
-
-    <!-- Research Section (toggle) -->
-    <div id="researchFields" style="display: none;">
-      <div class="mb-3">
-        <label class="form-label">Research Title</label>
-        <input type="text" class="form-control" name="researchTitle">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Abstract</label>
-        <textarea class="form-control" name="researchAbstract" rows="3"></textarea>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Co-Authors (comma-separated)</label>
-        <input type="text" class="form-control" name="coAuthorsRawInput">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Preferred Session</label>
-        <select class="form-select" name="sessionPreference">
-          <option value="">No Preference</option>
-          <option value="studentSession">Student Session</option>
-          <option value="facultySession">Faculty Session</option>
-        </select>
+    <!-- Change Password -->
+    <div class="card mb-5">
+      <div class="card-header">Change Password</div>
+      <div class="card-body">
+        <form action="/profile" method="POST">
+          <div class="mb-3">
+            <label for="currentPassword" class="form-label">Current Password</label>
+            <input type="password" class="form-control" name="currentPassword" required>
+          </div>
+          <div class="mb-3">
+            <label for="newPassword" class="form-label">New Password</label>
+            <input type="password" class="form-control" name="newPassword" required>
+          </div>
+          <div class="mb-3">
+            <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
+            <input type="password" class="form-control" name="confirmNewPassword" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </form>
       </div>
     </div>
 
-    <!-- Student Info (toggle) -->
-    <div class="mb-3">
-      <label class="form-label">Are you a student?</label><br>
-      <div class="btn-group" role="group">
-        <input type="radio" class="btn-check" name="isStudent" id="studentYes" value="yes" required>
-        <label class="btn btn-outline-primary" for="studentYes">Yes</label>
-
-        <input type="radio" class="btn-check" name="isStudent" id="studentNo" value="no" required>
-        <label class="btn btn-outline-primary" for="studentNo">No</label>
+    <!-- Conference Location Map (Coming Soon) -->
+    <div class="card mb-4">
+      <div class="card-header">Conference Location</div>
+      <div class="card-body">
+        <p>Location of SOBIE 2025 conference at Sandestin Golf & Beach Resort:</p>
+        <!-- Placeholder for Google Map -->
+        <div id="sobieMap" style="height: 300px; background-color: #f5f5f5; border: 1px solid #ccc;">
+          <p class="text-center pt-5">[Google Map Integration Coming Soon]</p>
+        </div>
       </div>
     </div>
+  </div>
 
-    <div id="studentInfoSection" style="display: none;">
-      <div class="mb-3">
-        <label class="form-label">Academic Affiliation</label>
-        <input type="text" class="form-control" name="studentAffiliation">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Program of Study</label>
-        <input type="text" class="form-control" name="studentProgram">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Classification</label>
-        <select class="form-select" name="studentClass">
-          <option value="">Select Classification</option>
-          <option value="undergraduate">Undergraduate</option>
-          <option value="graduate">Graduate</option>
-          <option value="doctoral">Doctoral</option>
-          <option value="other">Other</option>
-        </select>
+  <% if (user.role === 'researcher') { %>
+    <div class="card mb-4">
+      <div class="card-header">Your Research Submissions</div>
+      <div class="card-body">
+        <% if (submissions.length > 0) { %>
+          <% submissions.forEach(sub => { %>
+            <div class="mb-3 border-bottom pb-2">
+              <h5><%= sub.title %></h5>
+              <p><strong>Abstract:</strong> <%= sub.abstract %></p>
+              <p><strong>Co-Authors:</strong> <%= sub.coAuthors.join(', ') || 'None' %></p>
+              <p><strong>Session:</strong> <%= sub.session || 'None' %></p>
+              <p><strong>Date Submitted:</strong> <%= sub.submittedAt.toDateString() %></p>
+            </div>
+          <% }); %>
+  
+          <!-- Pagination -->
+          <nav>
+            <ul class="pagination justify-content-center">
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                  <a class="page-link" href="/user-dashboard?page=<%= i %>"><%= i %></a>
+                </li>
+              <% } %>
+            </ul>
+          </nav>
+  
+          <!-- Export CSV -->
+          <div class="text-center mt-3">
+            <a href="/user-dashboard/export" class="btn btn-outline-success btn-sm">Export Research as CSV</a>
+          </div>
+        <% } else { %>
+          <p class="text-danger">You haven’t submitted any research yet.</p>
+          <a href="/submit-research" class="btn btn-primary">Submit Research</a>
+        <% } %>
       </div>
     </div>
+  <% } %>
 
-    <!-- Faculty Info (toggle) -->
-    <div id="facultyInfoSection" style="display: none;">
-      <div class="mb-3">
-        <label class="form-label">University / Organization</label>
-        <input type="text" class="form-control" name="facultyAffiliation">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Academic Rank / Job Title</label>
-        <input type="text" class="form-control" name="facultyTitle">
-      </div>
-    </div>
+  <!-- Footer -->
+  <footer class="py-3 my-4">
+    <ul class="nav justify-content-center border-top pt-3 mb-3">
+      <li class="nav-item">
+        <a href="https://sobieconference.org" class="nav-link px-2 text-body-secondary">
+          &copy; 2025 SOBIE | sobieconference.org
+        </a>
+      </li>
+    </ul>
+  </footer>
 
-    <button type="submit" class="btn btn-success w-100 mt-4">Sign Up</button>
-  </form>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const roleSelect = document.getElementById('role');
-      const researchFields = document.getElementById('researchFields');
-      const studentYes = document.getElementById('studentYes');
-      const studentNo = document.getElementById('studentNo');
-      const studentInfoSection = document.getElementById('studentInfoSection');
-      const facultyInfoSection = document.getElementById('facultyInfoSection');
-
-      roleSelect.addEventListener('change', () => {
-        researchFields.style.display = roleSelect.value === 'researcher' ? 'block' : 'none';
-      });
-
-      studentYes.addEventListener('change', () => {
-        studentInfoSection.style.display = 'block';
-        facultyInfoSection.style.display = 'none';
-      });
-
-      studentNo.addEventListener('change', () => {
-        studentInfoSection.style.display = 'none';
-        facultyInfoSection.style.display = 'block';
-      });
-    });
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
