@@ -367,26 +367,26 @@ router.post('/reset-password/:token', async (req, res) => {
 });
 
 router.post('/update-password', async (req, res) => {
-  if (!req.session.userId) return res.redirect('/login');
+    if (!req.session.userId) return res.redirect('/login');
 
-  const { currentPassword, newPassword, confirmNewPassword } = req.body;
-  if (newPassword !== confirmNewPassword) {
-    req.session.successMsg = "Passwords do not match.";
-    return res.redirect('/user-dashboard');
-  }
+    const { currentPassword, newPassword, confirmNewPassword } = req.body;
+    if (newPassword !== confirmNewPassword) {
+        req.session.successMsg = "Passwords do not match.";
+        return res.redirect('/user-dashboard');
+    }
 
-  const user = await UserSOBIE.findById(req.session.userId);
-  const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
-  if (!isMatch) {
-    req.session.successMsg = "Current password is incorrect.";
-    return res.redirect('/user-dashboard');
-  }
+    const user = await UserSOBIE.findById(req.session.userId);
+    const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!isMatch) {
+        req.session.successMsg = "Current password is incorrect.";
+        return res.redirect('/user-dashboard');
+    }
 
-  user.passwordHash = await bcrypt.hash(newPassword, 10);
-  await user.save();
+    user.passwordHash = await bcrypt.hash(newPassword, 10);
+    await user.save();
 
-  req.session.successMsg = "Password successfully updated.";
-  res.redirect('/user-dashboard');
+    req.session.successMsg = "Password successfully updated.";
+    res.redirect('/user-dashboard');
 });
 
 

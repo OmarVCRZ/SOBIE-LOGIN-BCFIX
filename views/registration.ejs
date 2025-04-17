@@ -1,168 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Conference Registration - SOBIE</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/styles/sobie-styles.css">
+    <meta charset="UTF-8">
+    <title>Conference Registration - SOBIE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/sobie-styles.css">
 </head>
 
 <body class="container-fluid">
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 px-4">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">
-        <img src="/assets/sobie-icon.svg" alt="SOBIE Logo" width="40">
-      </a>
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/user-dashboard">Dashboard</a>
-        </li>
-      </ul>
-      <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 px-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/assets/sobie-icon.svg" alt="SOBIE Logo" width="40">
+            </a>
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user-dashboard">Dashboard</a>
+                </li>
+            </ul>
+            <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="mb-4">SOBIE Conference Registration</h2>
+        <form action="/profile" method="POST">
+            <!-- Role Selection -->
+            <div class="card mb-4">
+                <div class="card-header">Registering As</div>
+                <div class="card-body">
+                    <select name="role" id="role" class="form-select" required>
+                        <option value="">Select Role</option>
+                        <option value="attendee" <%=user.role==='attendee' ? 'selected' : '' %>>Attendee</option>
+                        <option value="researcher" <%=user.role==='researcher' ? 'selected' : '' %>>Researcher</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Student/Faculty Toggle -->
+            <div class="card mb-4">
+                <div class="card-header">Are You a Student?</div>
+                <div class="card-body">
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" name="isStudent" id="studentYes" value="yes"
+                            <%=user.isStudent ? 'checked' : '' %>>
+                        <label class="btn btn-outline-primary" for="studentYes">Yes</label>
+
+                        <input type="radio" class="btn-check" name="isStudent" id="studentNo" value="no"
+                            <%=!user.isStudent ? 'checked' : '' %>>
+                        <label class="btn btn-outline-primary" for="studentNo">No</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Info -->
+            <div class="card mb-4" id="studentSection" style="display:none;">
+                <div class="card-header">Student Information</div>
+                <div class="card-body">
+                    <input type="text" name="studentAffiliation" class="form-control mb-2"
+                        placeholder="Academic Affiliation" value="<%= user.studentAffiliation || '' %>">
+                    <input type="text" name="studentProgram" class="form-control mb-2" placeholder="Program of Study"
+                        value="<%= user.studentProgram || '' %>">
+                    <select class="form-select" name="studentClass">
+                        <option value="">Classification</option>
+                        <option value="undergraduate" <%=user.studentClass==='undergraduate' ? 'selected' : '' %>
+                            >Undergraduate</option>
+                        <option value="graduate" <%=user.studentClass==='graduate' ? 'selected' : '' %>>Graduate
+                        </option>
+                        <option value="doctoral" <%=user.studentClass==='doctoral' ? 'selected' : '' %>>Doctoral
+                        </option>
+                        <option value="other" <%=user.studentClass==='other' ? 'selected' : '' %>>Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Faculty Info -->
+            <div class="card mb-4" id="facultySection" style="display:none;">
+                <div class="card-header">Faculty / Professional Information</div>
+                <div class="card-body">
+                    <input type="text" name="facultyAffiliation" class="form-control mb-2"
+                        placeholder="University / Organization" value="<%= user.facultyAffiliation || '' %>">
+                    <input type="text" name="facultyTitle" class="form-control" placeholder="Academic Rank / Job Title"
+                        value="<%= user.facultyTitle || '' %>">
+                </div>
+            </div>
+
+            <!-- Research Submission (Conditional) -->
+            <div class="card mb-4" id="researchSection" style="display:none;">
+                <div class="card-header">Research Submission</div>
+                <div class="card-body">
+                    <input type="text" name="researchTitle" class="form-control mb-3" placeholder="Research Title"
+                        value="<%= user.researchTitle || '' %>">
+                    <textarea name="researchAbstract" rows="4" class="form-control mb-3"
+                        placeholder="Abstract"><%= user.researchAbstract || '' %></textarea>
+                    <input type="text" name="coAuthorsRawInput" class="form-control mb-3"
+                        placeholder="Co-Authors (comma-separated)" value="<%= user.coAuthors?.join(', ') || '' %>">
+                    <select class="form-select" name="sessionPreference">
+                        <option value="">Preferred Session</option>
+                        <option value="studentSession" <%=user.sessionPreference==='studentSession' ? 'selected' : '' %>
+                            >Student Session</option>
+                        <option value="facultySession" <%=user.sessionPreference==='facultySession' ? 'selected' : '' %>
+                            >Faculty Session</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Hotel Info + Map -->
+            <div class="card mb-4">
+                <div class="card-header">Hotel Accommodation Acknowledgement</div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item border-0"><i>All Conference Activities are held at the Sandestin Golf
+                                & Beach Resort.</i></li>
+                        <li class="list-group-item border-0"><i>Hotel accommodations are made separately from Conference
+                                Registration.</i></li>
+                        <li class="list-group-item border-0"><i><strong>SOBIE Group Code:</strong> <a
+                                    class="btn btn-outline-primary btn-sm" target="_blank">Book Online, TBA</a> or call
+                                <a href="tel:800-320-8115">800-320-8115</a></i></li>
+                        <li class="list-group-item border-0"><i>Discounted rates are available for the weekends
+                                <strong>before & after</strong> the SOBIE conference.</i></li>
+                    </ul>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="hotelAgree" id="hotelAgree"
+                            <%=user.hotelAgree ? 'checked' : '' %> required>
+                        <label class="form-check-label" for="hotelAgree">I acknowledge hotel accommodations are separate
+                            from this registration form.</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="mb-4">
+                <div class="card">
+                    <div class="card-header">SOBIE Conference Location Map</div>
+                    <div class="card-body p-0">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3449.5256859313463!2d-86.33101362452573!3d30.391275600681306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8890bccd6a2a3c8f%3A0x92b74896938b36e0!2sSandestin%20Golf%20and%20Beach%20Resort!5e0!3m2!1sen!2sus!4v1713279990099!5m2!1sen!2sus"
+                            width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center mb-5">
+                <button type="submit" class="btn btn-success px-4 py-2">Submit Registration</button>
+            </div>
+        </form>
     </div>
-  </nav>
 
-  <div class="container">
-    <h2 class="mb-4">SOBIE Conference Registration</h2>
-    <form action="/profile" method="POST">
-      <!-- Role Selection -->
-      <div class="card mb-4">
-        <div class="card-header">Registering As</div>
-        <div class="card-body">
-          <select name="role" id="role" class="form-select" required>
-            <option value="">Select Role</option>
-            <option value="attendee" <%= user.role === 'attendee' ? 'selected' : '' %>>Attendee</option>
-            <option value="researcher" <%= user.role === 'researcher' ? 'selected' : '' %>>Researcher</option>
-          </select>
-        </div>
-      </div>
+    <!-- Footer -->
+    <footer class="py-3 my-4">
+        <ul class="nav justify-content-center border-top pt-3 mb-3">
+            <li class="nav-item">
+                <a href="https://sobieconference.org" class="nav-link px-2 text-body-secondary">
+                    &copy; 2025 SOBIE | sobieconference.org
+                </a>
+            </li>
+        </ul>
+    </footer>
 
-      <!-- Student/Faculty Toggle -->
-      <div class="card mb-4">
-        <div class="card-header">Are You a Student?</div>
-        <div class="card-body">
-          <div class="btn-group" role="group">
-            <input type="radio" class="btn-check" name="isStudent" id="studentYes" value="yes" <%= user.isStudent ? 'checked' : '' %>>
-            <label class="btn btn-outline-primary" for="studentYes">Yes</label>
+    <!-- Script -->
+    <script>
+        const roleSelect = document.getElementById('role');
+        const studentYes = document.getElementById('studentYes');
+        const studentNo = document.getElementById('studentNo');
+        const studentSection = document.getElementById('studentSection');
+        const facultySection = document.getElementById('facultySection');
+        const researchSection = document.getElementById('researchSection');
 
-            <input type="radio" class="btn-check" name="isStudent" id="studentNo" value="no" <%= !user.isStudent ? 'checked' : '' %>>
-            <label class="btn btn-outline-primary" for="studentNo">No</label>
-          </div>
-        </div>
-      </div>
+        function toggleSections() {
+            researchSection.style.display = roleSelect.value === 'researcher' ? 'block' : 'none';
+            const isStudent = studentYes.checked;
+            studentSection.style.display = isStudent ? 'block' : 'none';
+            facultySection.style.display = !isStudent ? 'block' : 'none';
+        }
 
-      <!-- Student Info -->
-      <div class="card mb-4" id="studentSection" style="display:none;">
-        <div class="card-header">Student Information</div>
-        <div class="card-body">
-          <input type="text" name="studentAffiliation" class="form-control mb-2" placeholder="Academic Affiliation" value="<%= user.studentAffiliation || '' %>">
-          <input type="text" name="studentProgram" class="form-control mb-2" placeholder="Program of Study" value="<%= user.studentProgram || '' %>">
-          <select class="form-select" name="studentClass">
-            <option value="">Classification</option>
-            <option value="undergraduate" <%= user.studentClass === 'undergraduate' ? 'selected' : '' %>>Undergraduate</option>
-            <option value="graduate" <%= user.studentClass === 'graduate' ? 'selected' : '' %>>Graduate</option>
-            <option value="doctoral" <%= user.studentClass === 'doctoral' ? 'selected' : '' %>>Doctoral</option>
-            <option value="other" <%= user.studentClass === 'other' ? 'selected' : '' %>>Other</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Faculty Info -->
-      <div class="card mb-4" id="facultySection" style="display:none;">
-        <div class="card-header">Faculty / Professional Information</div>
-        <div class="card-body">
-          <input type="text" name="facultyAffiliation" class="form-control mb-2" placeholder="University / Organization" value="<%= user.facultyAffiliation || '' %>">
-          <input type="text" name="facultyTitle" class="form-control" placeholder="Academic Rank / Job Title" value="<%= user.facultyTitle || '' %>">
-        </div>
-      </div>
-
-      <!-- Research Submission (Conditional) -->
-      <div class="card mb-4" id="researchSection" style="display:none;">
-        <div class="card-header">Research Submission</div>
-        <div class="card-body">
-          <input type="text" name="researchTitle" class="form-control mb-3" placeholder="Research Title" value="<%= user.researchTitle || '' %>">
-          <textarea name="researchAbstract" rows="4" class="form-control mb-3" placeholder="Abstract"><%= user.researchAbstract || '' %></textarea>
-          <input type="text" name="coAuthorsRawInput" class="form-control mb-3" placeholder="Co-Authors (comma-separated)" value="<%= user.coAuthors?.join(', ') || '' %>">
-          <select class="form-select" name="sessionPreference">
-            <option value="">Preferred Session</option>
-            <option value="studentSession" <%= user.sessionPreference === 'studentSession' ? 'selected' : '' %>>Student Session</option>
-            <option value="facultySession" <%= user.sessionPreference === 'facultySession' ? 'selected' : '' %>>Faculty Session</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Hotel Info + Map -->
-      <div class="card mb-4">
-        <div class="card-header">Hotel Accommodation Acknowledgement</div>
-        <div class="card-body">
-          <ul class="list-group list-group-flush mb-3">
-            <li class="list-group-item border-0"><i>All Conference Activities are held at the Sandestin Golf & Beach Resort.</i></li>
-            <li class="list-group-item border-0"><i>Hotel accommodations are made separately from Conference Registration.</i></li>
-            <li class="list-group-item border-0"><i><strong>SOBIE Group Code:</strong> <a class="btn btn-outline-primary btn-sm" target="_blank">Book Online, TBA</a> or call <a href="tel:800-320-8115">800-320-8115</a></i></li>
-            <li class="list-group-item border-0"><i>Discounted rates are available for the weekends <strong>before & after</strong> the SOBIE conference.</i></li>
-          </ul>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="hotelAgree" id="hotelAgree" <%= user.hotelAgree ? 'checked' : '' %> required>
-            <label class="form-check-label" for="hotelAgree">I acknowledge hotel accommodations are separate from this registration form.</label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Map -->
-      <div class="mb-4">
-        <div class="card">
-          <div class="card-header">SOBIE Conference Location Map</div>
-          <div class="card-body p-0">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3449.5256859313463!2d-86.33101362452573!3d30.391275600681306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8890bccd6a2a3c8f%3A0x92b74896938b36e0!2sSandestin%20Golf%20and%20Beach%20Resort!5e0!3m2!1sen!2sus!4v1713279990099!5m2!1sen!2sus"
-              width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
-            </iframe>
-          </div>
-        </div>
-      </div>
-
-      <!-- Submit Button -->
-      <div class="text-center mb-5">
-        <button type="submit" class="btn btn-success px-4 py-2">Submit Registration</button>
-      </div>
-    </form>
-  </div>
-
-  <!-- Footer -->
-  <footer class="py-3 my-4">
-    <ul class="nav justify-content-center border-top pt-3 mb-3">
-      <li class="nav-item">
-        <a href="https://sobieconference.org" class="nav-link px-2 text-body-secondary">
-          &copy; 2025 SOBIE | sobieconference.org
-        </a>
-      </li>
-    </ul>
-  </footer>
-
-  <!-- Script -->
-  <script>
-    const roleSelect = document.getElementById('role');
-    const studentYes = document.getElementById('studentYes');
-    const studentNo = document.getElementById('studentNo');
-    const studentSection = document.getElementById('studentSection');
-    const facultySection = document.getElementById('facultySection');
-    const researchSection = document.getElementById('researchSection');
-
-    function toggleSections() {
-      researchSection.style.display = roleSelect.value === 'researcher' ? 'block' : 'none';
-      const isStudent = studentYes.checked;
-      studentSection.style.display = isStudent ? 'block' : 'none';
-      facultySection.style.display = !isStudent ? 'block' : 'none';
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      roleSelect.addEventListener('change', toggleSections);
-      studentYes.addEventListener('change', toggleSections);
-      studentNo.addEventListener('change', toggleSections);
-      toggleSections(); // run once on load
-    });
-  </script>
+        document.addEventListener('DOMContentLoaded', () => {
+            roleSelect.addEventListener('change', toggleSections);
+            studentYes.addEventListener('change', toggleSections);
+            studentNo.addEventListener('change', toggleSections);
+            toggleSections(); // run once on load
+        });
+    </script>
 </body>
+
 </html>

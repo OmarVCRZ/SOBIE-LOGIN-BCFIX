@@ -1,151 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>SOBIE - User Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/styles/sobie-styles.css">
+    <meta charset="UTF-8">
+    <title>SOBIE - User Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/sobie-styles.css">
 </head>
 
 <body class="container-fluid">
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 px-4">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">
-        <img src="/assets/sobie-icon.svg" alt="SOBIE Logo" width="40">
-      </a>
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item mx-2">
-          <a class="nav-link active" href="/user-dashboard">Dashboard</a>
-        </li>
-        <li class="nav-item mx-2">
-            <a class="nav-link <%= activePage === 'registration' ? 'active' : '' %>" href="/registration">Conference Registration</a>
-        </li>
-      </ul>
-      <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
-    </div>
-  </nav>
-
-  <% if (successMsg) { %>
-    <div class="alert alert-success text-center"><%= successMsg %></div>
-  <% } %>
-
-  <% if (user.hotelAgree && user.hasResearch) { %>
-    <div class="alert alert-info text-center">
-      <strong>You're all set!</strong> Your SOBIE conference registration and research submission have been received.
-      <br>Be sure to book your hotel using code <strong>SOBIE</strong> at the Sandestin Golf & Beach Resort.
-    </div>
-  
-    <div class="card mb-4">
-      <div class="card-header">SOBIE Conference Location</div>
-      <div class="card-body text-center">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13967.108397096603!2d-86.32972119462095!3d30.37835189414802!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8890c406ea1ae4d3%3A0x2a2ccfc013db9f9d!2sSandestin%20Golf%20and%20Beach%20Resort!5e0!3m2!1sen!2sus!4v1713217238100!5m2!1sen!2sus"
-          width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </div>
-    </div>
-  <% } %>
-  
-  
-  <div class="container">
-    <h2 class="mb-4">Welcome, <%= user.firstName %>!</h2>
-
-    <!-- Account Info -->
-    <div class="card mb-4">
-      <div class="card-header">Account Information</div>
-      <div class="card-body">
-        <p><strong>Name:</strong> <%= user.firstName %> <%= user.lastName %></p>
-        <p><strong>Email:</strong> <%= user.email %></p>
-        <p><strong>Username:</strong> <%= user.username %></p>
-        <p><strong>Account Role:</strong> <%= user.role %></p>
-      </div>
-    </div>
-
-    <!-- Change Password -->
-    <div class="card mb-5">
-      <div class="card-header">Change Password</div>
-      <div class="card-body">
-        <form action="/update-password" method="POST">
-          <div class="mb-3">
-            <label for="currentPassword" class="form-label">Current Password</label>
-            <input type="password" class="form-control" name="currentPassword" required>
-          </div>
-          <div class="mb-3">
-            <label for="newPassword" class="form-label">New Password</label>
-            <input type="password" class="form-control" name="newPassword" required>
-          </div>
-          <div class="mb-3">
-            <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
-            <input type="password" class="form-control" name="confirmNewPassword" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Update Password</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Conference Location Map (Coming Soon) -->
-    <% if (user.hasResearch) { %>
-        <div class="card mb-4">
-          <div class="card-header">SOBIE Conference Location</div>
-          <div class="card-body text-center">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13967.108397096603!2d-86.32972119462095!3d30.37835189414802!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8890c406ea1ae4d3%3A0x2a2ccfc013db9f9d!2sSandestin%20Golf%20and%20Beach%20Resort!5e0!3m2!1sen!2sus!4v1713217238100!5m2!1sen!2sus"
-              width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"></iframe>
-          </div>
-        </div>
-    <% } %>      
-
-  <% if (user.role === 'researcher') { %>
-    <div class="card mb-4">
-      <div class="card-header">Your Research Submissions</div>
-      <div class="card-body">
-        <% if (user.hasResearch && submissions.length > 0) { %>
-          <% submissions.forEach(sub => { %>
-            <div class="mb-3 border-bottom pb-2">
-              <h5><%= sub.title %></h5>
-              <p><strong>Abstract:</strong> <%= sub.abstract %></p>
-              <p><strong>Co-Authors:</strong> <%= sub.coAuthors.join(', ') || 'None' %></p>
-              <p><strong>Session:</strong> <%= sub.session || 'None' %></p>
-              <p><strong>Date Submitted:</strong> <%= sub.submittedAt.toDateString() %></p>
-            </div>
-          <% }); %>
-  
-          <!-- Pagination -->
-          <nav>
-            <ul class="pagination justify-content-center">
-              <% for (let i = 1; i <= totalPages; i++) { %>
-                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                  <a class="page-link" href="/user-dashboard?page=<%= i %>"><%= i %></a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 px-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/assets/sobie-icon.svg" alt="SOBIE Logo" width="40">
+            </a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" href="/user-dashboard">Dashboard</a>
                 </li>
-              <% } %>
+                <li class="nav-item mx-2">
+                    <a class="nav-link <%= activePage === 'registration' ? 'active' : '' %>"
+                        href="/registration">Conference Registration</a>
+                </li>
             </ul>
-          </nav>
-  
-          <!-- Export CSV -->
-          <div class="text-center mt-3">
-            <a href="/user-dashboard/export" class="btn btn-outline-success btn-sm">Export Research as CSV</a>
-          </div>
-        <% } else { %>
-            <p class="text-danger">No research submission found.</p>
-        <% } %>
-      </div>
-    </div>
-  <% } %>
-  
-  <!-- Footer -->
-  <footer class="py-3 my-4">
-    <ul class="nav justify-content-center border-top pt-3 mb-3">
-      <li class="nav-item">
-        <a href="https://sobieconference.org" class="nav-link px-2 text-body-secondary">
-          &copy; 2025 SOBIE | sobieconference.org
-        </a>
-      </li>
-    </ul>
-  </footer>
+            <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+        </div>
+    </nav>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <% if (successMsg) { %>
+        <div class="alert alert-success text-center">
+            <%= successMsg %>
+        </div>
+        <% } %>
+
+            <% if (user.hotelAgree && user.hasResearch) { %>
+                <div class="alert alert-info text-center">
+                    <strong>You're all set!</strong> Your SOBIE conference registration and research submission have
+                    been received.
+                    <br>Be sure to book your hotel using code <strong>SOBIE</strong> at the Sandestin Golf & Beach
+                    Resort.
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">SOBIE Conference Location</div>
+                    <div class="card-body text-center">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13967.108397096603!2d-86.32972119462095!3d30.37835189414802!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8890c406ea1ae4d3%3A0x2a2ccfc013db9f9d!2sSandestin%20Golf%20and%20Beach%20Resort!5e0!3m2!1sen!2sus!4v1713217238100!5m2!1sen!2sus"
+                            width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+                <% } %>
+
+
+                    <div class="container">
+                        <h2 class="mb-4">Welcome, <%= user.firstName %>!</h2>
+
+                        <!-- Account Info -->
+                        <div class="card mb-4">
+                            <div class="card-header">Account Information</div>
+                            <div class="card-body">
+                                <p><strong>Name:</strong>
+                                    <%= user.firstName %>
+                                        <%= user.lastName %>
+                                </p>
+                                <p><strong>Email:</strong>
+                                    <%= user.email %>
+                                </p>
+                                <p><strong>Username:</strong>
+                                    <%= user.username %>
+                                </p>
+                                <p><strong>Account Role:</strong>
+                                    <%= user.role %>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Change Password -->
+                        <div class="card mb-5">
+                            <div class="card-header">Change Password</div>
+                            <div class="card-body">
+                                <form action="/update-password" method="POST">
+                                    <div class="mb-3">
+                                        <label for="currentPassword" class="form-label">Current Password</label>
+                                        <input type="password" class="form-control" name="currentPassword" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPassword" class="form-label">New Password</label>
+                                        <input type="password" class="form-control" name="newPassword" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
+                                        <input type="password" class="form-control" name="confirmNewPassword" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Update Password</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Conference Location Map (Coming Soon) -->
+                        <% if (user.hasResearch) { %>
+                            <div class="card mb-4">
+                                <div class="card-header">SOBIE Conference Location</div>
+                                <div class="card-body text-center">
+                                    <iframe
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13967.108397096603!2d-86.32972119462095!3d30.37835189414802!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8890c406ea1ae4d3%3A0x2a2ccfc013db9f9d!2sSandestin%20Golf%20and%20Beach%20Resort!5e0!3m2!1sen!2sus!4v1713217238100!5m2!1sen!2sus"
+                                        width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+                                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                </div>
+                            </div>
+                            <% } %>
+
+                                <% if (user.role==='researcher' ) { %>
+                                    <div class="card mb-4">
+                                        <div class="card-header">Your Research Submissions</div>
+                                        <div class="card-body">
+                                            <% if (user.hasResearch && submissions.length> 0) { %>
+                                                <% submissions.forEach(sub=> { %>
+                                                    <div class="mb-3 border-bottom pb-2">
+                                                        <h5>
+                                                            <%= sub.title %>
+                                                        </h5>
+                                                        <p><strong>Abstract:</strong>
+                                                            <%= sub.abstract %>
+                                                        </p>
+                                                        <p><strong>Co-Authors:</strong>
+                                                            <%= sub.coAuthors.join(', ') || ' None' %>
+                                                        </p>
+                                                        <p><strong>Session:</strong>
+                                                            <%= sub.session || 'None' %>
+                                                        </p>
+                                                        <p><strong>Date Submitted:</strong>
+                                                            <%= sub.submittedAt.toDateString() %>
+                                                        </p>
+                                                    </div>
+                                                    <% }); %>
+
+                                                        <!-- Pagination -->
+                                                        <nav>
+                                                            <ul class="pagination justify-content-center">
+                                                                <% for (let i=1; i <=totalPages; i++) { %>
+                                                                    <li
+                                                                        class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                                        <a class="page-link"
+                                                                            href="/user-dashboard?page=<%= i %>">
+                                                                            <%= i %>
+                                                                        </a>
+                                                                    </li>
+                                                                    <% } %>
+                                                            </ul>
+                                                        </nav>
+
+                                                        <!-- Export CSV -->
+                                                        <div class="text-center mt-3">
+                                                            <a href="/user-dashboard/export"
+                                                                class="btn btn-outline-success btn-sm">Export Research
+                                                                as CSV</a>
+                                                        </div>
+                                                        <% } else { %>
+                                                            <p class="text-danger">No research submission found.</p>
+                                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <% } %>
+
+                                        <!-- Footer -->
+                                        <footer class="py-3 my-4">
+                                            <ul class="nav justify-content-center border-top pt-3 mb-3">
+                                                <li class="nav-item">
+                                                    <a href="https://sobieconference.org"
+                                                        class="nav-link px-2 text-body-secondary">
+                                                        &copy; 2025 SOBIE | sobieconference.org
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </footer>
+
+                                        <script
+                                            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'); // Password Hashing: https://www.npmjs.com/package/bcrypt
 
 // Mongoose Schematics: https://mongoosejs.com/docs/guide.html
@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
     },
     // Password Reset 
     resetPasswordToken: { // stores unique secure token that's sent to user's email for password reset vertification
-        type: String, 
+        type: String,
         default: null
     },
     resetPasswordExpires: { // timestamp for how long the reset link is valid
