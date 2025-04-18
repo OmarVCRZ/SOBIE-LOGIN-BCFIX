@@ -45,8 +45,14 @@ router.get('/registration', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
     const user = await UserSOBIE.findById(req.session.userId);
     if (!user) return res.redirect('/login');
-    res.render('registration', { user, activePage: 'registration' });
+
+    res.render('registration', {
+        user,
+        activePage: 'registration',
+        csrfToken: req.csrfToken() 
+    });
 });
+
 
 // Password Reset Form
 
@@ -93,7 +99,8 @@ router.get('/user-dashboard', async (req, res) => {
         currentPage: page,
         totalPages,
         successMsg,
-        activePage: 'dashboard' // Add this if using active nav highlighting
+        activePage: 'dashboard',
+        csrfToken: req.csrfToken()
     });
 });
 
@@ -395,7 +402,10 @@ router.get('/verify', async (req, res) => {
     }
 
     req.session.verifiedUserId = user._id;
-    res.render('final-verify', { verified: true });
+    res.render('final-verify', {
+        verified: true,
+        csrfToken: req.csrfToken() 
+    });
 });
 
 
@@ -519,7 +529,7 @@ router.post('/update-password', async (req, res) => {
 
 
 // User Registration Form (Profile), saves the post-sign ip registration fields
-router.post('/profile', async (req, res) => {
+router.post('/registration', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
 
     const {

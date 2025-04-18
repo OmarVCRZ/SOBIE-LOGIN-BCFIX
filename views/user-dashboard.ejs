@@ -45,8 +45,7 @@
 
             <% if (user.hotelAgree && user.hasResearch) { %>
                 <div class="alert alert-info text-center">
-                    <strong>You're all set!</strong> Your SOBIE conference registration and research submission have
-                    been received.
+                    <strong>You're all set!</strong> Your SOBIE conference registration<% if (user.hasResearch) { %> and research submission<% } %> have been received.
                     <br>Be sure to book your hotel using code <strong>SOBIE</strong> at the Sandestin Golf & Beach
                     Resort.
                 </div>
@@ -91,6 +90,7 @@
                             <div class="card-header">Change Password</div>
                             <div class="card-body">
                                 <form action="/update-password" method="POST">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <div class="mb-3">
                                         <label for="currentPassword" class="form-label">Current Password</label>
                                         <input type="password" class="form-control" name="currentPassword" required>
@@ -109,7 +109,7 @@
                         </div>
 
                         <!-- Conference Location Map (Coming Soon) -->
-                        <% if (user.hasResearch) { %>
+                        <% if (user.hotelAgree) { %>
                             <div class="card mb-4">
                                 <div class="card-header">SOBIE Conference Location</div>
                                 <div class="card-body text-center">
