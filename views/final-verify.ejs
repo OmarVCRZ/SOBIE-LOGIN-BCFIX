@@ -24,11 +24,7 @@
         <p>Your account is almost ready! Click below to finalize your signup and proceed to login.</p>
 
         <form action="/finalize-signup" method="POST" class="mt-3">
-            <form action="/finalize-signup" method="POST" class="mt-3">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <button type="submit" class="btn btn-success">Finalize Account</button>
-            </form>
-            
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="btn btn-success">Finalize Account</button>
         </form>
     </div>
