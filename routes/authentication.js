@@ -215,15 +215,20 @@ router.post('/signup', async (req, res) => {
         username,
         passwordHash,
         tokenVerify,
-        isVerified: false,
-        // role will be assigned later on /registration
+        isVerified: false
     });
 
     const link = `${process.env.HOST_IP}/verify?token=${tokenVerify}`;
     await transporter.sendMail({
         to: email,
         subject: "SOBIE Email Verification",
-        text: `Click this link to verify your account:\n\n${link}`
+        html: `
+          <h3>Welcome to SOBIE!</h3>
+          <p>Click the link below to verify your email address:</p>
+          <p><a href="${link}" target="_blank" style="color:#0d6efd;">Verify Your Email</a></p>
+          <p>If the link doesn't work, copy and paste this into your browser:</p>
+          <p>${link}</p>
+        `
     });
 
     res.redirect('/verify');
@@ -263,23 +268,38 @@ router.post('/login', async (req, res) => {
 // ===== VERIFY GET & FINALIZE =====
 router.get('/verify', async (req, res) => {
     const { token } = req.query;
-    if (!token) return res.render('verify');
 
-    const user = await UserSOBIE.findOne({ tokenVerify: token });
-    if (!user) return res.send("Invalid or expired verification link.");
-    if (user.isVerified) return res.send("User already verified. Please log in.");
+    if (!token) {
+        // User visited /verify manually or after redirect without token
+        return res.render('verify', {
+            errorMsg: "Missing or invalid token. Please check your email for the verification link."
+        });
+    }
 
+    // Find user by token, only if not verified yet
+    const user = await UserSOBIE.findOne({ tokenVerify: token, isVerified: false });
+
+    if (!user) {
+        return res.render('verify', {
+            errorMsg: "Invalid or expired verification link."
+        });
+    }
+
+    // Save to session for secure finalize route
     req.session.verifiedUserId = user._id;
     res.render('final-verify', { verified: true });
 });
 
+
+
 router.post('/finalize-signup', async (req, res) => {
     const userId = req.session.verifiedUserId;
-    if (!userId) return res.send("Session expired.");
+    if (!userId) return res.send("Verification session expired.");
 
     const user = await UserSOBIE.findById(userId);
-    if (!user) return res.send("Invalid or already verified.");
-
+    if (!user || user.isVerified) {
+        return res.send("Invalid or already verified.");
+    }
 
     user.isVerified = true;
     user.tokenVerify = null;
@@ -288,8 +308,9 @@ router.post('/finalize-signup', async (req, res) => {
     delete req.session.verifiedUserId;
     req.session.userId = user._id;
 
-    res.redirect(user.role === 'admin' ? '/admin-dashboard' : '/user-dashboard');
+    res.redirect('/user-dashboard');
 });
+
 
 // ===== VERIFY LOGIN TOKEN =====
 router.get('/verify-login', async (req, res) => {

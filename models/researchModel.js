@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Research Section Data
 const researchSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'UserSOBIE', required: true },
     title: String,
