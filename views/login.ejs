@@ -30,6 +30,20 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <form action="/login" method="POST" class="card shadow p-4">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                    <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
+                        <div class="alert alert-danger text-center">
+                            <%= errorMsg %>
+                        </div>
+                    <% } %>
+
+                    <% if (typeof successMsg !== 'undefined' && successMsg) { %>
+                        <div class="alert alert-success text-center">
+                            <%= successMsg %>
+                        </div>
+                    <% } %>
+                    
                     <!-- Email -->
                     <div class="mb-3">
                         <label for="email" class="form-label">Email Address</label>

@@ -13,21 +13,29 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 px-4">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-                <img src="/assets/sobie-icon.svg" alt="SOBIE Logo" width="40">
-            </a>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item mx-2">
-                    <a class="nav-link active" href="/user-dashboard">Dashboard</a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link <%= activePage === 'registration' ? 'active' : '' %>"
-                        href="/registration">Conference Registration</a>
-                </li>
-            </ul>
+          <!-- SOBIE Logo -->
+          <a class="navbar-brand me-3" href="/">
+            <img src="/assets/sobie-icon.svg" alt="SOBIE Logo" width="40">
+          </a>
+      
+          <!-- Left-side links: Dashboard + Conference Registration -->
+          <ul class="navbar-nav d-flex flex-row align-items-center">
+            <li class="nav-item me-3">
+              <a class="nav-link active" href="/user-dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link <%= activePage === 'registration' ? 'active' : '' %>" href="/registration">Conference Registration</a>
+            </li>
+          </ul>
+      
+          <!-- Spacer pushes logout to the far right -->
+          <div class="ms-auto">
             <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+          </div>
         </div>
-    </nav>
+      </nav>
+      
+      
 
     <% if (successMsg) { %>
         <div class="alert alert-success text-center">

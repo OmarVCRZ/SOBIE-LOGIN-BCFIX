@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="/styles/sobie-styles.css">
 </head>
 
+<!-- 
+    The purpose of this file is only for account creation
+ -->
+
 <body class="container-fluid">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
@@ -23,55 +27,66 @@
     <!-- Signup Form -->
     <div class="container">
         <form action="/signup" method="POST">
-            <div class="card mb-4">
-                <div class="card-header">Create Your SOBIE Account</div>
-                <div class="card-body">
-                    <!-- First & Last Name -->
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label for="firstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" name="firstName" id="firstName" required>
-                        </div>
-                        <div class="col">
-                            <label for="lastName" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" name="lastName" id="lastName" required>
-                        </div>
-                    </div>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-                    <!-- Email -->
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" name="email" id="email" required>
-                    </div>
-
-                    <!-- Username -->
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" name="username" id="username" required>
-                    </div>
-
-                    <!-- Passwords -->
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" name="password" id="password" required>
-                        </div>
-                        <div class="col">
-                            <label for="confirmPassword" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword"
-                                required>
-                        </div>
-                    </div>
+            <% if (typeof errorMsg !=='undefined' && errorMsg) { %>
+                <div class="alert alert-danger">
+                    <%= errorMsg %>
                 </div>
-            </div>
+                <% } %>
+                    <div class="card mb-4">
+                        <div class="card-header">Create Your SOBIE Account</div>
+                        <div class="card-body">
+                            <!-- First & Last Name -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" name="firstName" id="firstName" required>
+                                </div>
+                                <div class="col">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" name="lastName" id="lastName" required>
+                                </div>
+                            </div>
 
-            <!-- Submit -->
-            <div class="text-center mb-5">
-                <button type="submit" class="btn btn-success px-4 py-2">Register Account</button>
-            </div>
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" name="email" id="email" required>
+                            </div>
+
+                            <!-- Username -->
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" name="username" id="username" required>
+                            </div>
+
+                            <!-- Passwords -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" name="password" id="password" required>
+                                </div>
+                                <div class="col">
+                                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-control" name="confirmPassword"
+                                        id="confirmPassword" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="text-center mb-5">
+                        <button type="submit" class="btn btn-success px-4 py-2">Register Account</button>
+                    </div>
         </form>
     </div>
-
+    <div class="container">
+        <div class="d-flex justify-content-start">
+            <a href="/login" class="btn btn-outline-dark mt-3">← Return to Login</a>
+        </div>
+    </div>    
     <!-- Footer -->
     <footer class="py-3 my-2">
         <ul class="nav justify-content-center border-top pt-3 mb-3">
@@ -83,11 +98,22 @@
         </ul>
     </footer>
 
+    
+
     <!-- Validation Script -->
     <script>
         document.querySelector('form').addEventListener('submit', function (e) {
             const password = document.getElementById('password').value;
             const confirm = document.getElementById('confirmPassword').value;
+
+            const passwordRequirements = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+            if (!passwordRequirements.test(password)) {
+                e.preventDefault();
+                alert("Password must be at least 8 characters long and include:\n- 1 uppercase letter\n- 1 number\n- 1 special character.");
+                return;
+            }
+
             if (password !== confirm) {
                 e.preventDefault();
                 alert("Passwords do not match.");

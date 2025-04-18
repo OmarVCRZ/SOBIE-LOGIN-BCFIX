@@ -1,4 +1,4 @@
-// ===== REQUIRED MODULES =====
+// Imports
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
@@ -8,7 +8,10 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const UserSOBIE = require('../models/userModel');
 const Research = require('../models/researchModel');
 
-// ===== EMAIL SETUP =====
+`
+This file is the core logic for all files.
+`
+// Email Transporter Setup: https://www.nodemailer.com/
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -17,16 +20,27 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// ===== REDIRECT ROOT =====
+// General Navigation Routes [route below]
 router.get('/', (req, res) => res.redirect('/login'));
 
-// ===== AUTH PAGES =====
-router.get('/login', (req, res) => res.render('login'));
-router.get('/signup', (req, res) => res.render('signup'));
-router.get('/forgot-password', (req, res) => res.render('forgot-password'));
+// Auth Pages
+router.get('/login', (req, res) => {
+    const successMsg = req.session.successMsg;
+    delete req.session.successMsg;
+    res.render('login', { errorMsg: null, successMsg });
+});
 
+router.get('/signup', (req, res) => res.render('signup', { errorMsg: null }));
+router.get('/forgot-password', (req, res) => {
+    res.render('forgot-password', {
+        errorMsg: null,
+        csrfToken: req.csrfToken()
+    });
+});
 
-// ===== CONFERENCE REGISTRATION PAGE =====
+// Registration for Conference 
+
+// Load the post-login registration form and requires a logged in user (req.session.userId) / pulls their data for the ejs form
 router.get('/registration', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
     const user = await UserSOBIE.findById(req.session.userId);
@@ -34,7 +48,9 @@ router.get('/registration', async (req, res) => {
     res.render('registration', { user, activePage: 'registration' });
 });
 
-// ===== PASSWORD RESET FORM =====
+// Password Reset Form
+
+// Verifies the rest token is valid and not expired and renders the form to allow a password update (forgot password flow)
 router.get('/reset-password/:token', async (req, res) => {
     const user = await UserSOBIE.findOne({
         resetPasswordToken: req.params.token,
@@ -42,10 +58,16 @@ router.get('/reset-password/:token', async (req, res) => {
     });
 
     if (!user) return res.send("Password reset link is invalid or expired.");
-    res.render('reset-password', { token: req.params.token });
+
+    res.render('reset-password', {
+        token: req.params.token,
+        csrfToken: req.csrfToken() // required for the form
+    });
 });
 
-// ===== USER DASHBOARD W/ PAGINATION =====
+// User-Dashboard / Pagination: https://pagination.js.org/
+
+// Loafs the user dashboard (shows user info, list paginated research submissions, shows success messages [after login or verification])
 router.get('/user-dashboard', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
     const user = await UserSOBIE.findById(req.session.userId);
@@ -75,7 +97,9 @@ router.get('/user-dashboard', async (req, res) => {
     });
 });
 
-// ===== USER EXPORT CSV =====
+// User Research CSV Export: https://www.npmjs.com/package/csv-writer
+
+// Downloads the user's research submissions via CSV, and its used by the researchers on the dashboard.
 router.get('/user-dashboard/export', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
     const user = await UserSOBIE.findById(req.session.userId);
@@ -106,7 +130,9 @@ router.get('/user-dashboard/export', async (req, res) => {
     res.download('user_research_export.csv');
 });
 
-// ===== ADMIN DASHBOARD =====
+// Admin Dashboard (GET)
+
+// Shows all users with pagination: https://pagination.js.org/
 router.get('/admin-dashboard', async (req, res) => {
     if (!req.session.tempAdmin) return res.redirect('/login');
     delete req.session.tempAdmin; // admin must verify each time;
@@ -123,6 +149,9 @@ router.get('/admin-dashboard', async (req, res) => {
     res.render('admin-dashboard', { users, totalPages, currentPage: page });
 });
 
+// Admin Dashboard (CSV Export): https://www.npmjs.com/package/csv-writer
+
+// CSV export of all user and research data: 
 router.get('/admin-dashboard/export', async (req, res) => {
     const users = await UserSOBIE.find();
 
@@ -151,20 +180,51 @@ router.get('/admin-dashboard/export', async (req, res) => {
     res.download('sobie_users_export.csv');
 });
 
-// ===== PROFILE VIEW =====
-router.get('/profile', async (req, res) => {
-    if (!req.session.userId) return res.redirect('/login');
-    const user = await UserSOBIE.findById(req.session.userId);
-    res.render('profile', { user });
+// Admin resend verification email
+router.post('/resend-email', async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.render('login', { errorMsg: "Email is required to resend verification." });
+    }
+
+    const user = await UserSOBIE.findOne({ email });
+
+    if (!user || !user.tokenVerify) {
+        return res.render('login', { errorMsg: "No verification token found for this user." });
+    }
+
+    const link = `${process.env.HOST_IP}/verify-login?token=${user.tokenVerify}`;
+    await transporter.sendMail({
+        to: email,
+        subject: "SOBIE Admin Login Verification",
+        text: `Click the link to verify your login:\n\n${link}`
+    });
+
+    res.render('verify', {
+        errorMsg: "A new verification email has been sent.",
+        csrfToken: req.csrfToken(),
+        email
+    });
+    
 });
 
-// ===== SUBMIT RESEARCH (VIEW + POST) =====
+// Profile Page (Progress)
+
+// Loads profile info 
+// router.get('/profile', async (req, res) => {
+//     if (!req.session.userId) return res.redirect('/login');
+//     const user = await UserSOBIE.findById(req.session.userId);
+//     res.render('profile', { user });
+// });
+
+// Submit Research (view)
 router.get('/submit-research', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
     const user = await UserSOBIE.findById(req.session.userId);
     res.render('submit-research', { user, success: false });
 });
-
+// Submit Research (inserts a new research submission document)
 router.post('/submit-research', async (req, res) => {
     const { researchTitle, researchAbstract, sessionPreference, coAuthorsRawInput } = req.body;
     const coAuthors = coAuthorsRawInput ? coAuthorsRawInput.split(',').map(n => n.trim()).filter(Boolean) : [];
@@ -189,11 +249,21 @@ router.post('/submit-research', async (req, res) => {
     }
 });
 
-// ===== SIGNUP =====
+// Signup
+
+// Creates the user and sends a verification email and does not insert user until /finalize-signup step (correct)
 router.post('/signup', async (req, res) => {
     const {
         firstName, lastName, email, username, password, confirmPassword
     } = req.body;
+
+    const strongPasswordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+    if (!strongPasswordRegex.test(password)) {
+        return res.render('signup', {
+            errorMsg: "Password must include at least 8 characters, one uppercase letter, one number, and one special character."
+        });
+    }
 
     if (password !== confirmPassword) {
         return res.render('signup', { errorMsg: "Passwords do not match." });
@@ -202,7 +272,7 @@ router.post('/signup', async (req, res) => {
     const existingEmail = await UserSOBIE.findOne({ email });
     const existingUsername = await UserSOBIE.findOne({ username });
     if (existingEmail || existingUsername) {
-        return res.send("Account already exists.");
+        return res.render('signup', { errorMsg: "Account already exists." });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -235,7 +305,11 @@ router.post('/signup', async (req, res) => {
 });
 
 
-// ===== LOGIN =====
+// Login
+
+// Handles the regular and admin login, 
+// on login page you have to use a secret password that is stored in .env file [UNA] to get access to admin dashboard)
+// steps: 1 go to login page, step 2 enter whatever email you want for 2FA, step 3 enter UNA as password (the admin user is never stored in DB)
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const isAdminLogin = password === process.env.ADMIN_SECRET_PASSWORD;
@@ -260,38 +334,72 @@ router.post('/login', async (req, res) => {
             email,
             tokenVerify: verifyToken
         };
-        
+    
         return res.redirect('/verify');
     }
+    
+    // --- Regular User Flow ---
+    const user = await UserSOBIE.findOne({ email });
+    if (!user || !user.isVerified) {
+        return res.render('login', { errorMsg: "Invalid login or unverified account." });
+    }
+
+    const match = await bcrypt.compare(password, user.passwordHash);
+    if (!match) {
+        return res.render('login', { errorMsg: "Incorrect password." });
+    }
+
+    // Generate 2FA token and send
+    const verifyToken = crypto.randomBytes(20).toString('hex');
+    user.tokenVerify = verifyToken;
+    user.loginTokenExpires = Date.now() + 15 * 60 * 1000;
+    await user.save();
+
+    const link = `${process.env.HOST_IP}/verify-login?token=${verifyToken}`;
+    await transporter.sendMail({
+        to: email,
+        subject: "SOBIE Login Verification",
+        text: `Click the link to complete your login:\n\n${link}`
+    });
+
+    req.session.userLogin = {
+        email,
+        tokenVerify: verifyToken
+    };
+
+    res.redirect('/verify');
 });
 
-// ===== VERIFY GET & FINALIZE =====
+// Verify Section
+
+// Gets the verification token from email, finalizes signup in next POST Route
 router.get('/verify', async (req, res) => {
     const { token } = req.query;
 
     if (!token) {
-        // User visited /verify manually or after redirect without token
         return res.render('verify', {
-            errorMsg: "Missing or invalid token. Please check your email for the verification link."
+            errorMsg: "Missing or invalid token. Please check your email for the verification link.",
+            csrfToken: req.csrfToken(),
+            email: req.session?.userLogin?.email || req.session?.adminLogin?.email || ''
         });
     }
 
-    // Find user by token, only if not verified yet
     const user = await UserSOBIE.findOne({ tokenVerify: token, isVerified: false });
 
     if (!user) {
         return res.render('verify', {
-            errorMsg: "Invalid or expired verification link."
+            errorMsg: "Invalid or expired verification link.",
+            csrfToken: req.csrfToken(),
+            email: req.session?.userLogin?.email || req.session?.adminLogin?.email || ''
         });
     }
 
-    // Save to session for secure finalize route
     req.session.verifiedUserId = user._id;
     res.render('final-verify', { verified: true });
 });
 
 
-
+// Finalize Signup
 router.post('/finalize-signup', async (req, res) => {
     const userId = req.session.verifiedUserId;
     if (!userId) return res.send("Verification session expired.");
@@ -312,18 +420,18 @@ router.post('/finalize-signup', async (req, res) => {
 });
 
 
-// ===== VERIFY LOGIN TOKEN =====
+// Verify Login Token Section (verifies admin email login token / Admin login 2FA)
 router.get('/verify-login', async (req, res) => {
     const { token } = req.query;
 
-    // 🔒 Admin login
+    // Admin login
     if (req.session.adminLogin && req.session.adminLogin.tokenVerify === token) {
         req.session.tempAdmin = true;
         delete req.session.adminLogin;
         return res.redirect('/admin-dashboard'); // ADD return here
     }
 
-    // 🔒 Regular user login
+    // Regular user login
     const user = await UserSOBIE.findOne({
         tokenVerify: token,
         loginTokenExpires: { $gt: Date.now() }
@@ -340,7 +448,7 @@ router.get('/verify-login', async (req, res) => {
 });
 
 
-// ===== PASSWORD RESET FLOW =====
+// Forgot Password (handles pw reset email)
 router.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
     const user = await UserSOBIE.findOne({ email });
@@ -361,6 +469,7 @@ router.post('/forgot-password', async (req, res) => {
     res.send("Reset email sent.");
 });
 
+// Reset Password Section (handles reset form logic)
 router.post('/reset-password/:token', async (req, res) => {
     const { token } = req.params;
     const { password, confirmPassword } = req.body;
@@ -380,9 +489,11 @@ router.post('/reset-password/:token', async (req, res) => {
     user.resetPasswordExpires = undefined;
     await user.save();
 
-    res.send("Password successfully updated. You may now log in.");
+    req.session.successMsg = "Password successfully updated. You may now log in.";
+    res.redirect('/login');
 });
 
+// Updates PW from Dashbaord (allows loggin-in users to change their pw securely)
 router.post('/update-password', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
 
@@ -407,7 +518,7 @@ router.post('/update-password', async (req, res) => {
 });
 
 
-// Profile
+// User Registration Form (Profile), saves the post-sign ip registration fields
 router.post('/profile', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
 
@@ -507,7 +618,7 @@ SOBIE Conference Team
     res.redirect('/user-dashboard');
 });
 
-// ===== LOGOUT =====
+// Logout Section (clears the session and redirected back to login)
 router.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
