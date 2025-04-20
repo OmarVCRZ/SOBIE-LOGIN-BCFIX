@@ -6,9 +6,14 @@ https://github.com/barrycumbie/theSobieCo/wiki/Sobie-Co.-Memo:-SPRING-'25
 ## Problem Statement
 Regarding the #1, the team will consist of myself and Austin Moses.
 
-4/3/25: Brainstorming on Login Issue
-4/8-20/25: Finalized ideas commence coding sessions.
-The issue is that the SOBIE website lacks a structured approach for users like attendees/researchers/admin to establish a foundation of information to store, like user/password, manage profiles, registration, and research, and lacks web security.
+4/3/25: Brainstorming on Login Issue<br>
+4/8-22/25: Finalized ideas commence coding sessions<br>
+
+The issue is that the SOBIE website lacks a login structured system approach for users like attendees/researchers/admin to establish a foundation of information to store, like user/password, manage profiles, registration, and research, and lacks web security.
+
+![No-Login-System](/assets/login.jpeg) <br>
+![No-Dashboard](/assets/no-dashboard.jpeg) <br>
+![Undefined-Roles](/assets/undefined-roles.jpeg) <br>
 
 ## Objective
 The main goal is to establish the requirements necessary based on the issue stated above and establish pages for login, profile (attendees, researchers, admin), registration, and research. Then, secure the software development against common HTML form vulnerabilities like Cross-Site Scripting (XSS), SQL Injections, Cross-Site Request Forgery (CSRF), Path Traversal, and DOM-based XSS.
@@ -25,4 +30,4 @@ Admin Page information (view current users, registrants, contact information) (?
 
 - `sobie2023` = old "scraped" front-end code (no .php stuff) from an old sobie year
 
-![Flowchart](/assets/SOBIE.jpeg)
+![Flowchart](/assets/sobie-flowchart.jpeg)
